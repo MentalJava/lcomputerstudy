@@ -7,7 +7,16 @@ public class User {
 	private String u_name;
 	private String u_tel;
 	private String u_age;
+	private int rownum;
 	
+	public int getRownum() {
+		return rownum;
+	}
+
+	public void setRownum(int rownum) {
+		this.rownum = rownum;
+	}
+
 	public int getU_idx() {
 		return u_idx;
 	}
