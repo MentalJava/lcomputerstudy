@@ -4,10 +4,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>게시글 삭제</title>
+<title>수정 완료</title>
 </head>
 <body>
-<h1>삭제 완료</h1>
+<h1>수정 완료</h1>
 <a href="/lcomputerstudy/board-bbslist.do">돌아가기</a>
 </body>
 </html>

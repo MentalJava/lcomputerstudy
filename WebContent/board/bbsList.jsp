@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>게시판 목록</title>
+<link rel="stylesheet" href="boardd.css">
 </head>
 <body>
 <div class="boardcss_list_table">
@@ -29,8 +30,8 @@
         <tbody>
         	 <c:forEach items= "${list1}" var="item" varStatus="status">
             	<tr>
-            		<td><a href="board-bbsdetail.do?bbsID=${item.bbsID}">${item.rownum}</a></td>
-            		<td>${item.bbsTitle}</td>
+            		<td>${item.rownum}</td>
+            		<td><a href="board-bbsdetail.do?bbsID=${item.bbsID}">${item.bbsTitle}</a></td>
             		<td>${item.bbsUserID}</td>
             		<td>${item.bbsDate}</td>
             		<td>${item.bbsViews}</td>

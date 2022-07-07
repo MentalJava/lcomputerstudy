@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,19 +30,19 @@
 		<tr>
 			<th class="active" >작성자</th>
 			<td>
-			
+				${bbs.bbsUserID}
 			</td>
 		</tr>
 		<tr>
 			<th class="active">제목</th>
 			<td>
-			
+				${bbs.bbsTitle}
 			</td>
 		</tr>
 		<tr>
 			<th class="active" >내용</th>
 			<td>
-			
+				${bbs.bbsContents}
 			</td>
 		</tr>
 	</tbody>
@@ -50,7 +51,7 @@
 <div style="margin-left:1px;">
 <a href="board-bbslist.do" class="btn btn-primary">목록</a>
 <a href="board-bbsedit.do" class="btn btn-primary">수정</a>
-<a href="board-bbsdelete.do" class="btn btn-primary">삭제</a>
+<a href="board-bbsdelete-process.do" class="btn btn-primary">삭제</a>
 </div>
 </div>
 </div>

@@ -35,4 +35,15 @@ public class BbsService {
 		return dao.getTotalCount();
 	}
 
+	public Bbs getDetail(Bbs bbs1) {
+		return dao.getDetail(bbs1);
+	}
+
+	public void getEdit(Bbs bbs2) {
+		dao.getEdit(bbs2);
+	}
+
+	public void getDelete(Bbs bbs4) {
+		dao.getDelete(bbs4);
+	}
 }

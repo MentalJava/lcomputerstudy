@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.lcomputerstudy.testmvc.database.DBconnection;
 import com.lcomputerstudy.testmvc.service.BbsService;
 import com.lcomputerstudy.testmvc.service.UserService;
 import com.lcomputerstudy.testmvc.vo.Bbs;
@@ -60,9 +61,11 @@ public class controller extends HttpServlet {
 			request.setAttribute("list", list);
 			request.setAttribute("pagination", pagination);
 			break;
+			
 		case "/user-insert.do":
 			view = "user/insert";
 			break;
+			
 		case "/user-insert-process.do":
 			User user = new User();
 			user.setU_id(request.getParameter("id"));
@@ -76,9 +79,11 @@ public class controller extends HttpServlet {
 					
 			view = "user/insert-result";
 			break;
+			
 		case "/user-login.do":
 			view = "user/login";
 			break;
+			
 		case "/user-login-process.do":
 			idx = request.getParameter("login_id");
 			pw = request.getParameter("login_password");
@@ -125,6 +130,7 @@ public class controller extends HttpServlet {
 			request.setAttribute("list1", list1);
 			request.setAttribute("pagination1", pagination1);
 			break;
+			
 		case "/board-bbscontents.do":
 			view = "board/bbsContents";
 			break;
@@ -140,14 +146,51 @@ public class controller extends HttpServlet {
 				
 			view = "board/bbsResult";
 			break;
+			
 		case "/board-bbsdetail.do":
 			Bbs bbs1 = new Bbs();
 			bbs1.setBbsID(Integer.parseInt(request.getParameter("bbsID")));
-		
 			
-			
+			bbsService = BbsService.getInstance();
+			bbs1 = bbsService.getDetail(bbs1);
 			
 			view = "board/bbsDetail";
+			request.setAttribute("bbs", bbs1);	
+			break;
+			
+		case "/board-bbsedit.do":
+			Bbs bbs3 = new Bbs();
+			
+			bbsService = BbsService.getInstance();
+			bbs3 = bbsService.getDetail(bbs3);
+			
+			view = "board/bbsEdit";
+			request.setAttribute("bbs", bbs3);
+			break;
+			
+		case "/board-bbsedit-process.do":
+			Bbs bbs2 = new Bbs();
+			bbs2.setBbsID(Integer.parseInt(request.getParameter("bbsID")));
+			bbs2.setBbsUserID(request.getParameter("userid"));
+			bbs2.setBbsTitle(request.getParameter("title"));
+			bbs2.setBbsContents(request.getParameter("contents"));
+			
+			bbsService = BbsService.getInstance();
+			bbsService.getEdit(bbs2);
+			
+			view = "board/bbsEdit-result";
+			request.setAttribute("bbs", bbs2);
+			break;
+			
+		case "/board-delete-process.do":
+			Bbs bbs4 = new Bbs();
+			
+			bbs4.setBbsID((Integer.parseInt(request.getParameter("bbsID"))));
+			
+			bbsService = BbsService.getInstance();
+			bbsService.getDelete(bbs4);
+			
+			view = "board/bbsDelete";
 		}
 		
 		RequestDispatcher rd = request.getRequestDispatcher(view + ".jsp");

@@ -121,59 +121,76 @@ public class BbsDAO {
 		}
 		return count;
 	}
-	
-	public String getDate() {
+
+	public Bbs getDetail(Bbs bbs1) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT NOW()";
+		Bbs bbs = null;
+	
 		try {
+			conn = DBconnection.getConnection();
+			String sql = "SELECT * FROM bbs WHERE bbsID=?";
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, bbs1.getBbsID());
 			rs = pstmt.executeQuery();
-			if(rs.next()) {
-				return rs.getString(1);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "";
-	}
-	
-	public int getNext() {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String sql = "SELECT bbsID FROM bbs ORDER BY bbsID DESC";
-		try {
-			pstmt = conn.prepareStatement(sql);
-			rs = pstmt.executeQuery();
-			if(rs.next()) {
-				return rs.getInt(1)+1;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return -1;
-	}
-	
-	public int write(String bbsTitle, String bbsUserID, String bbsContents) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String sql = "INSERT INTO bbs VALUES(?, ?, ?, ?, ?, ?)";
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, getNext());
-			pstmt.setString(2, bbsTitle);
-			pstmt.setString(3, bbsUserID);
-			pstmt.setString(4, getDate());
-			pstmt.setString(5, bbsContents);
-			pstmt.setInt(6, 1);
 			
-			return pstmt.executeUpdate();
+			while (rs.next()) {
+				bbs = new Bbs();
+				bbs.setBbsUserID(rs.getString("bbsUserID"));
+				bbs.setBbsTitle(rs.getString("bbsTitle"));
+				bbs.setBbsContents(rs.getString("bbsContents"));
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+			if (rs != null) rs.close();
+			if (pstmt != null) pstmt.close();
+			if (conn != null) conn.close();
+			} catch (SQLException e) {
+			e.printStackTrace();
+			}
+		}
+		return bbs;
+	}
+	
+	public void getDelete(Bbs bbs4) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int rs = 0;
+		
+		try {
+			conn = DBconnection.getConnection();
+			String sql = "DELETE FROM bbs WHERE bbsID=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, bbs4.getBbsID());
+			rs = pstmt.executeUpdate();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return -1;
+	}
+	
+	public void getEdit(Bbs bbs2) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int rs;
+		
+		try {
+			conn = DBconnection.getConnection();
+			String sql = "UPDATE bbs SET bbsUserID=?, bbsTitle=?, bbsContents=? WHERE bbsID=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, bbs2.getBbsUserID());
+			pstmt.setString(2, bbs2.getBbsTitle());
+			pstmt.setString(3, bbs2.getBbsContents());
+			pstmt.setInt(4, bbs2.getBbsID());
+			
+			rs = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
+
