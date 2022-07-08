@@ -8,27 +8,22 @@
 <title>게시글 상세보기</title>
 </head>
 <body>
-<div class="row" style="margin-bottom:20px; margin-left:1px;">
-<div class="col-lg-12">
-<h1 class="page-header">상세 페이지</h1>
-</div>
-</div>
+<div class="container" >
+<div class="row">
 
-<div class="panel" style="margin-left:1px;">
-<div id="contAreaBox">
-<div class="panel">
-<div class="panel-body">
-<div class="table-responsive" style="text-align:center;">
-<table id="datatable-scroller"
-	class="table table-bordered tbl_Form">
-	<caption></caption>
-	<colgroup>
-		<col width="250px" />
-		<col />
-	</colgroup>
-	<tbody>
+	<table class="table table-striped"
+		style="text-align:center; border:1px solid #dddddd">
+		
+		<thead>
+			<tr>
+				<th colspan="3"
+					style="background-color: #eeeeee; text-align:center;">상세보기</th>
+					
+			</tr>
+		</thead>
+		<tbody>
 		<tr>
-			<th class="active" >작성자</th>
+			<th class="active">작성자</th>
 			<td>
 				${bbs.bbsUserID}
 			</td>
@@ -49,12 +44,13 @@
 </table>
 </div>
 <div style="margin-left:1px;">
-<a href="board-bbslist.do" class="btn btn-primary">목록</a>
-<a href="board-bbsedit.do" class="btn btn-primary">수정</a>
-<a href="board-bbsdelete-process.do" class="btn btn-primary">삭제</a>
-</div>
-</div>
-</div>
+	<table>
+		<tr>
+			<td><a href="board-bbslist.do" class="btn btn-primary">목록</a></td>
+			<td><a href="board-bbsedit.do?bbsid=${bbs.bbsID}" class="btn btn-primary">수정</a></td>
+			<td><a href="board-bbsdelete-process.do?bbsid=${bbs.bbsID}" class="btn btn-primary">삭제</a></td>
+		</tr>
+	</table>
 </div>
 </div>
 

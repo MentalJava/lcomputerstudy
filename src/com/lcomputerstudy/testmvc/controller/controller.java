@@ -160,6 +160,7 @@ public class controller extends HttpServlet {
 			
 		case "/board-bbsedit.do":
 			Bbs bbs3 = new Bbs();
+			bbs3.setBbsID(Integer.parseInt(request.getParameter("bbsid")));
 			
 			bbsService = BbsService.getInstance();
 			bbs3 = bbsService.getDetail(bbs3);
@@ -182,10 +183,10 @@ public class controller extends HttpServlet {
 			request.setAttribute("bbs", bbs2);
 			break;
 			
-		case "/board-delete-process.do":
+		case "/board-bbsdelete-process.do":
 			Bbs bbs4 = new Bbs();
 			
-			bbs4.setBbsID((Integer.parseInt(request.getParameter("bbsID"))));
+			bbs4.setBbsID((Integer.parseInt(request.getParameter("bbsid"))));
 			
 			bbsService = BbsService.getInstance();
 			bbsService.getDelete(bbs4);

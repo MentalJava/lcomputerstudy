@@ -137,6 +137,7 @@ public class BbsDAO {
 			
 			while (rs.next()) {
 				bbs = new Bbs();
+				bbs.setBbsID(rs.getInt("bbsID"));
 				bbs.setBbsUserID(rs.getString("bbsUserID"));
 				bbs.setBbsTitle(rs.getString("bbsTitle"));
 				bbs.setBbsContents(rs.getString("bbsContents"));
@@ -158,14 +159,13 @@ public class BbsDAO {
 	public void getDelete(Bbs bbs4) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		int rs = 0;
 		
 		try {
 			conn = DBconnection.getConnection();
 			String sql = "DELETE FROM bbs WHERE bbsID=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, bbs4.getBbsID());
-			rs = pstmt.executeUpdate();
+			pstmt.executeUpdate();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -175,7 +175,6 @@ public class BbsDAO {
 	public void getEdit(Bbs bbs2) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		int rs;
 		
 		try {
 			conn = DBconnection.getConnection();
@@ -186,7 +185,7 @@ public class BbsDAO {
 			pstmt.setString(3, bbs2.getBbsContents());
 			pstmt.setInt(4, bbs2.getBbsID());
 			
-			rs = pstmt.executeUpdate();
+			pstmt.executeUpdate();
 			
 		} catch (Exception e) {
 			e.printStackTrace();

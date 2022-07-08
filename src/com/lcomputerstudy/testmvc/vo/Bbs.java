@@ -7,17 +7,8 @@ public class Bbs {
 	private int bbsViews;
 	private String bbsUserID;
 	private String bbsDate;
-	private String bbswriter;
 	private int rownum;
 	
-	public String getBbswriter() {
-		return bbswriter;
-	}
-
-	public void setBbswriter(String bbswriter) {
-		this.bbswriter = bbswriter;
-	}
-
 	public int getBbsID() {
 		return bbsID;
 	}
