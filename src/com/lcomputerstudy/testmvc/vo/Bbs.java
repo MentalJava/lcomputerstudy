@@ -8,7 +8,34 @@ public class Bbs {
 	private String bbsUserID;
 	private String bbsDate;
 	private int rownum;
+	private int bbsorder;
+	private int bbsdepth;
+	private int bbsgroup;
 	
+	public int getBbsorder() {
+		return bbsorder;
+	}
+
+	public void setBbsorder(int bbsorder) {
+		this.bbsorder = bbsorder;
+	}
+
+	public int getBbsdepth() {
+		return bbsdepth;
+	}
+
+	public void setBbsdepth(int bbsdepth) {
+		this.bbsdepth = bbsdepth;
+	}
+
+	public int getBbsgroup() {
+		return bbsgroup;
+	}
+
+	public void setBbsgroup(int bbsgroup) {
+		this.bbsgroup = bbsgroup;
+	}
+
 	public int getBbsID() {
 		return bbsID;
 	}

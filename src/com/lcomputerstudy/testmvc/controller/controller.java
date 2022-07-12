@@ -140,10 +140,13 @@ public class controller extends HttpServlet {
 			bbs.setBbsUserID(request.getParameter("userid"));
 			bbs.setBbsTitle(request.getParameter("title"));
 			bbs.setBbsContents(request.getParameter("contents"));
+			bbs.setBbsgroup(Integer.parseInt(request.getParameter("bbsgroup")));
+			bbs.setBbsorder(Integer.parseInt(request.getParameter("bbsorder")));
+			bbs.setBbsdepth(Integer.parseInt(request.getParameter("bbsdepth")));
 			
 			bbsService = BbsService.getInstance();
 			bbsService.insertBbs(bbs);
-				
+			
 			view = "board/bbsResult";
 			break;
 			

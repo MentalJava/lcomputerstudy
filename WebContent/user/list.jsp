@@ -74,7 +74,6 @@
 				</c:when>
 			</c:choose> 
 			<c:forEach var="i" begin="${pagination.startPage}" end="${pagination.endPage}" step="1">
-				
 					<c:choose>
 						<c:when test="${ pagination.page eq i }">
 							

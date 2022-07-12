@@ -75,11 +75,15 @@ public class BbsDAO {
 		
 		try {
 			conn = DBconnection.getConnection();
-			String sql = "INSERT INTO bbs(bbstitle, bbsContents, bbsViews, bbsUserID, bbsDate) VALUE(?, ?, 0, ?, now())";
+			String sql = "INSERT INTO bbs(bbstitle, bbsContents, bbsViews, bbsUserID, bbsDate, bbsorder, bbsdepth, bbsgroup) VALUE(?, ?, 0, ?, now(), 1, 0, ?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, bbs.getBbsTitle());
 			pstmt.setString(2, bbs.getBbsContents());
 			pstmt.setString(3, bbs.getBbsUserID());
+			pstmt.setInt(4, bbs.getBbsgroup());
+			pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = conn.prepareStatement("UPDATE bbs SET bbsgroup = (SELECT last_insert_id()) WHERE bbsID = (SELECT last_insert_id());");
 			pstmt.executeUpdate();
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -89,6 +93,32 @@ public class BbsDAO {
 				if(pstmt != null) pstmt.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
+			}
+		}
+	}
+	
+	public void replyBbs(int order, int detph, int group) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = DBconnection.getConnection();
+			String sql = "UPDATE bbs SET bbsorder = bbsorder + 1, bbsdepth = bbsdepth + 1 WHERE bbsgroup=? and order>? and depth>?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, group);
+			pstmt.setInt(2, order);
+			pstmt.setInt(3, detph);
+			
+			pstmt.executeUpdate();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -141,6 +171,9 @@ public class BbsDAO {
 				bbs.setBbsUserID(rs.getString("bbsUserID"));
 				bbs.setBbsTitle(rs.getString("bbsTitle"));
 				bbs.setBbsContents(rs.getString("bbsContents"));
+				bbs.setBbsgroup(rs.getInt("bbsgroup"));
+				bbs.setBbsorder(rs.getInt("bbsorder"));
+				bbs.setBbsdepth(rs.getInt("bbsdepth"));
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -191,5 +224,7 @@ public class BbsDAO {
 			e.printStackTrace();
 		}
 	}
+	
+	
 }
 

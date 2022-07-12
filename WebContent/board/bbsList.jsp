@@ -41,7 +41,7 @@
     </table>
 </div>
 <div>
-	<button type="button" onclick="location.href='board-bbscontents.do'">글등록</button>
+		<button type="button" onclick="location.href='board-bbscontents.do'">글등록</button>
 </div>
 </body>
 </html>

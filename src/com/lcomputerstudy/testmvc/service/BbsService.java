@@ -46,4 +46,8 @@ public class BbsService {
 	public void getDelete(Bbs bbs4) {
 		dao.getDelete(bbs4);
 	}
+	
+	public void replyBbs(int order, int depth, int group) {
+		dao.replyBbs(order, depth, group);
+	}
 }
