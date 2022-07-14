@@ -83,8 +83,10 @@ public class BbsDAO {
 			pstmt.setInt(4, bbs.getBbsgroup());
 			pstmt.executeUpdate();
 			pstmt.close();
+			
 			pstmt = conn.prepareStatement("UPDATE bbs SET bbsgroup = (SELECT last_insert_id()) WHERE bbsID = (SELECT last_insert_id());");
 			pstmt.executeUpdate();
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {
@@ -97,20 +99,32 @@ public class BbsDAO {
 		}
 	}
 	
-	public void replyBbs(int order, int detph, int group) {
+	public void replyBbs(Bbs bbs) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		
 		try {
 			conn = DBconnection.getConnection();
-			String sql = "UPDATE bbs SET bbsorder = bbsorder + 1, bbsdepth = bbsdepth + 1 WHERE bbsgroup=? and order>? and depth>?";
+			String sql = new StringBuffer()
+					.append("INSERT INTO bbs")
+					.append("(bbstitle, bbsContents, bbsViews, bbsUserID, bbsDate, bbsorder, bbsdepth, bbsgroup)")
+					.append("VALUE(?, ?, 0, ?, now(), ?, ?, ?)")
+					.toString();
 			
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, group);
-			pstmt.setInt(2, order);
-			pstmt.setInt(3, detph);
-			
+			pstmt.setString(1, bbs.getBbsTitle());
+			pstmt.setString(2, bbs.getBbsContents());
+			pstmt.setString(3, bbs.getBbsUserID());
+			pstmt.setInt(4, bbs.getBbsgroup());
+			pstmt.setInt(5, bbs.getBbsorder()+1);
+			pstmt.setInt(6, bbs.getBbsdepth()+1);
 			pstmt.executeUpdate();
+			pstmt.close();
+			
+			pstmt = conn.prepareStatement("UPDATE bbs SET bbsorder = bbsorder+1 WHERE bbsgroup = ? AND bbsorder >= ? AND bbsID <> last_insert_id();");
+			pstmt.setInt(1, bbs.getBbsgroup());
+			pstmt.setInt(2, bbs.getBbsorder());
+			pstmt.executeUpdate();
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {
@@ -225,6 +239,20 @@ public class BbsDAO {
 		}
 	}
 	
-	
+	public void viewCount(int bbsID) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = DBconnection.getConnection();
+			String sql = "UPDATE bbs SET bbsViews = bbsViews + 1 WHERE bbsID = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, bbsID);
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+	}
 }
+
 

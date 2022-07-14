@@ -49,7 +49,7 @@
 			<td><a href="board-bbslist.do" class="btn btn-primary">목록</a></td>
 			<td><a href="board-bbsedit.do?bbsid=${bbs.bbsID}" class="btn btn-primary">수정</a></td>
 			<td><a href="board-bbsdelete-process.do?bbsid=${bbs.bbsID}" class="btn btn-primary">삭제</a></td>
-			<td><a href="board-bbscontents.do?order=${bbs.bbsorder}&depth=${bbs.bbsdepth}&group=${bbs.bbsgroup}" class="btn btn-primary">답글쓰기</a>
+			<td><a href="board-bbscontents.do?group=${bbs.bbsgroup}&order=${bbs.bbsorder}&depth=${bbs.bbsdepth}" class="btn btn-primary">답글쓰기</a>
 		</tr>
 	</table>
 </div>

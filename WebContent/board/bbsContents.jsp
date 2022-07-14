@@ -9,6 +9,9 @@
 <body>
 
 <form action="board-bbscontents-process.do" method="post">
+<input type="hidden" name="bbsgroup" value="${bbs.bbsgroup}">
+<input type="hidden" name="bbsorder" value="${bbs.bbsorder}">
+<input type="hidden" name="bbsdepth" value="${bbs.bbsdepth}">
 		<table style="width:550px">
 			<tr>
 				<td>이름</td>

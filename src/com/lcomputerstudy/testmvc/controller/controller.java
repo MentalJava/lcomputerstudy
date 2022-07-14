@@ -132,7 +132,18 @@ public class controller extends HttpServlet {
 			break;
 			
 		case "/board-bbscontents.do":
+			String strGroup = request.getParameter("group");
+			Bbs bbs5 = null;
+		
+			if (strGroup != null) {
+				bbs5 = new Bbs();
+				bbs5.setBbsgroup(Integer.parseInt(request.getParameter("group")));
+				bbs5.setBbsorder(Integer.parseInt(request.getParameter("order")));
+				bbs5.setBbsdepth(Integer.parseInt(request.getParameter("depth")));
+			}
+			
 			view = "board/bbsContents";
+			request.setAttribute("bbs", bbs5);
 			break;
 			
 		case "/board-bbscontents-process.do":
@@ -144,10 +155,16 @@ public class controller extends HttpServlet {
 			bbs.setBbsorder(Integer.parseInt(request.getParameter("bbsorder")));
 			bbs.setBbsdepth(Integer.parseInt(request.getParameter("bbsdepth")));
 			
+			if (bbs.getBbsgroup() != 0) {
+				bbsService = BbsService.getInstance();
+				bbsService.replyBbs(bbs);
+			} else {	
 			bbsService = BbsService.getInstance();
 			bbsService.insertBbs(bbs);
+			}
 			
 			view = "board/bbsResult";
+			request.setAttribute("bbs", bbs);
 			break;
 			
 		case "/board-bbsdetail.do":
