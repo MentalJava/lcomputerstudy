@@ -109,20 +109,21 @@ public class BbsDAO {
 					.append("(bbstitle, bbsContents, bbsViews, bbsUserID, bbsDate, bbsorder, bbsdepth, bbsgroup)")
 					.append("VALUE(?, ?, 0, ?, now(), ?, ?, ?)")
 					.toString();
+			int pOrder = bbs.getBbsorder()+1;
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, bbs.getBbsTitle());
 			pstmt.setString(2, bbs.getBbsContents());
 			pstmt.setString(3, bbs.getBbsUserID());
-			pstmt.setInt(4, bbs.getBbsgroup());
-			pstmt.setInt(5, bbs.getBbsorder()+1);
-			pstmt.setInt(6, bbs.getBbsdepth()+1);
+			pstmt.setInt(4, pOrder);
+			pstmt.setInt(5, bbs.getBbsdepth()+1);
+			pstmt.setInt(6, bbs.getBbsgroup());
 			pstmt.executeUpdate();
 			pstmt.close();
 			
-			pstmt = conn.prepareStatement("UPDATE bbs SET bbsorder = bbsorder+1 WHERE bbsgroup = ? AND bbsorder >= ? AND bbsID <> last_insert_id();");
+			pstmt = conn.prepareStatement("UPDATE bbs SET bbsorder = bbsorder+1 WHERE bbsgroup = ? AND bbsorder >= ? AND bbsID != last_insert_id();");
 			pstmt.setInt(1, bbs.getBbsgroup());
-			pstmt.setInt(2, bbs.getBbsorder());
+			pstmt.setInt(2, pOrder);
 			pstmt.executeUpdate();
 			
 		} catch (Exception ex) {

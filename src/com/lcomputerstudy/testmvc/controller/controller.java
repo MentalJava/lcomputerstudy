@@ -148,14 +148,16 @@ public class controller extends HttpServlet {
 			
 		case "/board-bbscontents-process.do":
 			Bbs bbs = new Bbs();
+			String pGroup = request.getParameter("bbsgroup");
 			bbs.setBbsUserID(request.getParameter("userid"));
 			bbs.setBbsTitle(request.getParameter("title"));
 			bbs.setBbsContents(request.getParameter("contents"));
-			bbs.setBbsgroup(Integer.parseInt(request.getParameter("bbsgroup")));
-			bbs.setBbsorder(Integer.parseInt(request.getParameter("bbsorder")));
-			bbs.setBbsdepth(Integer.parseInt(request.getParameter("bbsdepth")));
 			
-			if (bbs.getBbsgroup() != 0) {
+			
+			if (!(pGroup.equals(""))) {
+				bbs.setBbsgroup(Integer.parseInt(request.getParameter("bbsgroup")));
+				bbs.setBbsorder(Integer.parseInt(request.getParameter("bbsorder")));
+				bbs.setBbsdepth(Integer.parseInt(request.getParameter("bbsdepth")));
 				bbsService = BbsService.getInstance();
 				bbsService.replyBbs(bbs);
 			} else {	

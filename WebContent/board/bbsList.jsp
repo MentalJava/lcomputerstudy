@@ -6,17 +6,60 @@
 <head>
 <meta charset="UTF-8">
 <title>게시판 목록</title>
-<link rel="stylesheet" href="boardd.css">
+<style>
+table {
+	margin-left:auto;
+	margin-right:auto;
+}
+
+table td, th {
+	border-collapse : collapse;
+	border : 1px solid teal;
+	text-align : center;
+}
+
+.button {
+	background-color : white;
+	margin-left : 60%;
+	border : none;
+	width : 70px;
+	height : 50px;	
+	opacity: 0.6;
+  transition: 0.3s;
+}
+
+.button:hover {
+	opacity : 1
+}
+
+ul {
+		width:500px;
+		height:50px;
+		margin:10px auto;
+}
+
+li {
+		list-style:none;
+		width:50px;
+		line-height:50px;
+		border:1px solid #ededed;
+		float:left;
+		text-align:center;
+		margin:0 5px;
+		border-radius:5px;
+}
+</style>
 </head>
 <body>
-<div class="boardcss_list_table">
-    <table class="list_table">
-        <caption>게시글 목록</caption>
+<div>
+    <table>
+        <caption style="font-size : 35px">게시글 목록</caption>
         <colgroup>
-            <col />
-            <col />
-            <col />
-            <col />
+            <col width="50px"/>
+            <col width="200px"/>
+            <col width="70px"/>
+            <col width="100px"/>
+            <col width="60px"/>
         </colgroup>
         <thead>
             <tr>
@@ -41,7 +84,39 @@
     </table>
 </div>
 <div>
-		<button type="button" onclick="location.href='board-bbscontents.do'">글등록</button>
+	<ul>
+		<c:choose>
+			<c:when test="${pagination1.prevPage ge 1}">
+				<li>
+					<a href="board-bbslist.do?page=${pagination1.prevPage}">◀</a>
+				</li>
+			</c:when>
+		</c:choose>
+		<c:forEach var="i" begin="${pagination1.startPage}" end="${pagination1.endPage}" step="1">
+				<c:choose>
+					<c:when test="${pagination1.page eq i}">		
+						<li style="background-color:#ededed;">
+							<span>${i}</span>
+						</li>
+					</c:when>
+					<c:when test="${pagination1.page ne i}">
+						<li>
+							<a href="board-bbslist.do?page=${i}">${i}</a>						
+						</li>
+					</c:when>
+				</c:choose>
+		</c:forEach>
+		<c:choose>
+				<c:when test="${ pagination1.nextPage lt pagination1.lastPage }">
+					<li>
+						<a href="user-list.do?page=${pagination1.nextPage}">▶</a>
+					</li>
+				</c:when>
+		</c:choose> 
+	</ul>
+</div>
+<div>
+		<button class="button" onclick="location.href='board-bbscontents.do'">글등록</button>
 </div>
 </body>
 </html>
