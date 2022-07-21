@@ -8,10 +8,10 @@
 <title>게시글 상세보기</title>
 </head>
 <body>
-<div class="container" >
-<div class="row">
+<div>
+<div>
 
-	<table class="table table-striped"
+	<table
 		style="text-align:center; border:1px solid #dddddd">
 		
 		<thead>
@@ -52,6 +52,29 @@
 			<td><a href="board-bbscontents.do?group=${bbs.bbsgroup}&order=${bbs.bbsorder}&depth=${bbs.bbsdepth}" class="btn btn-primary">답글쓰기</a>
 		</tr>
 	</table>
+</div>
+<div>
+<form action="comments-comm-process.do" method="post">
+<input type="hidden" name="b_id" value="${bbs.bbsID}">
+	<table>
+		<tr>
+			<th>작성자</th>
+			<td><input type="text" name="userid" size="50"></td>
+		</tr>
+		<tr>
+			<td>댓글</td>
+		</tr>
+		<tr>
+			<td><textarea name="comments"></textarea></td>
+		</tr>
+		<tr>
+			<td><input type="submit" value="저장"></td>
+		</tr>
+	</table>
+</form>
+</div>
+<div>
+
 </div>
 </div>
 

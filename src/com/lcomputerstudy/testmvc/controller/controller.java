@@ -11,8 +11,10 @@ import javax.servlet.http.HttpSession;
 
 import com.lcomputerstudy.testmvc.database.DBconnection;
 import com.lcomputerstudy.testmvc.service.BbsService;
+import com.lcomputerstudy.testmvc.service.CommService;
 import com.lcomputerstudy.testmvc.service.UserService;
 import com.lcomputerstudy.testmvc.vo.Bbs;
+import com.lcomputerstudy.testmvc.vo.Comm;
 import com.lcomputerstudy.testmvc.vo.Pagination;
 import com.lcomputerstudy.testmvc.vo.User;
 
@@ -39,6 +41,7 @@ public class controller extends HttpServlet {
 		String idx;
 		HttpSession session = null;
 		command = checkSession(request, response, command);
+		boolean isRedirected = false;
 		
 		
 		switch (command) {
@@ -171,7 +174,7 @@ public class controller extends HttpServlet {
 			
 		case "/board-bbsdetail.do":
 			Bbs bbs1 = new Bbs();
-			bbs1.setBbsID(Integer.parseInt(request.getParameter("bbsID")));
+			bbs1.setBbsID(Integer.parseInt(request.getParameter("bbsid")));
 			
 			bbsService = BbsService.getInstance();
 			bbs1 = bbsService.getDetail(bbs1);
@@ -193,7 +196,7 @@ public class controller extends HttpServlet {
 			
 		case "/board-bbsedit-process.do":
 			Bbs bbs2 = new Bbs();
-			bbs2.setBbsID(Integer.parseInt(request.getParameter("bbsID")));
+			bbs2.setBbsID(Integer.parseInt(request.getParameter("bbsid")));
 			bbs2.setBbsUserID(request.getParameter("userid"));
 			bbs2.setBbsTitle(request.getParameter("title"));
 			bbs2.setBbsContents(request.getParameter("contents"));
@@ -214,11 +217,32 @@ public class controller extends HttpServlet {
 			bbsService.getDelete(bbs4);
 			
 			view = "board/bbsDelete";
+			break;
+			
+		case "/comments-comm-process.do":
+			Comm comm = new Comm();
+			String b_id = request.getParameter("b_id");
+			if(!(b_id.equals(""))) {
+				comm.setB_id(Integer.parseInt(b_id));
+				comm.setC_userid(request.getParameter("userid"));
+				comm.setC_comments(request.getParameter("comments"));
+				
+				CommService commService = CommService.getInstance();
+				commService.insertComments(comm);
+			}
+			isRedirected = true;
+			view = "board-bbsdetail.do?bbsid="+comm.getB_id();
+			break;
 		}
 		
-		RequestDispatcher rd = request.getRequestDispatcher(view + ".jsp");
-		rd.forward(request, response);
+		if (!isRedirected) {
+			RequestDispatcher rd = request.getRequestDispatcher(view + ".jsp");
+			rd.forward(request, response);
+		} else { 
+			response.sendRedirect(view);
+		}
 	}
+
 
 	String checkSession(HttpServletRequest request, HttpServletResponse response, String command) {
 HttpSession session = request.getSession();

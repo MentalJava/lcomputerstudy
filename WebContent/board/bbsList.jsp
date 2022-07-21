@@ -74,7 +74,7 @@ li {
         	 <c:forEach items= "${list1}" var="item" varStatus="status">
             	<tr>
             		<td>${item.rownum}</td>
-            		<td><a href="board-bbsdetail.do?bbsID=${item.bbsID}">${item.bbsTitle}</a></td>
+            		<td><a href="board-bbsdetail.do?bbsid=${item.bbsID}">${item.bbsTitle}</a></td>
             		<td>${item.bbsUserID}</td>
             		<td>${item.bbsDate}</td>
             		<td>${item.bbsViews}</td>

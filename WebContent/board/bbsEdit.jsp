@@ -9,7 +9,7 @@
 <body>
 <h1>게시글 수정</h1>
 <form action="board-bbsedit-process.do" method="post">
-	<input type="hidden" name="bbsID" value="${bbs.bbsID}">
+	<input type="hidden" name="bbsid" value="${bbs.bbsID}">
 	<div>작성자 : </div>
 	<div><input name="userid" value="${bbs.bbsUserID}"></div>
 	<div>제목 :</div>

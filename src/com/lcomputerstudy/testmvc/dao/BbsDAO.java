@@ -34,6 +34,7 @@ public class BbsDAO {
 					.append("			ta.*\n")
 					.append("From		Bbs ta\n")
 					.append("INNER JOIN (SELECT @rownum := (SELECT COUNT(*)-?+1 FROM Bbs ta)) tb ON 1=1\n")
+					.append("ORDER BY bbsgroup DESC, bbsorder ASC\n")
 					.append("LIMIT		?, ").append(Pagination.perPage).append("\n")
 					.toString();
 			pstmt = conn.prepareStatement(query);
@@ -102,6 +103,7 @@ public class BbsDAO {
 	public void replyBbs(Bbs bbs) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		
 		try {
 			conn = DBconnection.getConnection();
 			String sql = new StringBuffer()
@@ -125,6 +127,7 @@ public class BbsDAO {
 			pstmt.setInt(1, bbs.getBbsgroup());
 			pstmt.setInt(2, pOrder);
 			pstmt.executeUpdate();
+			pstmt.close();
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -253,6 +256,21 @@ public class BbsDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
+	}
+	
+	public void commentsBbs() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = DBconnection.getConnection();
+			String query = new StringBuilder()
+					.append("SELECT * FROM comments ")
+					.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 }
 
