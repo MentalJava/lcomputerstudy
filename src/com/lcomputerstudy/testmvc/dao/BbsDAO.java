@@ -257,21 +257,6 @@ public class BbsDAO {
 			e.printStackTrace();
 		}	
 	}
-	
-	public void commentsBbs() {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		
-		try {
-			conn = DBconnection.getConnection();
-			String query = new StringBuilder()
-					.append("SELECT * FROM comments ")
-					.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
 }
 
 

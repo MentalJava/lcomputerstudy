@@ -109,7 +109,7 @@ li {
 		<c:choose>
 				<c:when test="${ pagination1.nextPage lt pagination1.lastPage }">
 					<li>
-						<a href="user-list.do?page=${pagination1.nextPage}">▶</a>
+						<a href="board-bbslist.do?page=${pagination1.nextPage}">▶</a>
 					</li>
 				</c:when>
 		</c:choose> 

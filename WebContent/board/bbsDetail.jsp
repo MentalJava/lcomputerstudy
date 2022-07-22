@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>게시글 상세보기</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
 <body>
 <div>
@@ -54,13 +55,47 @@
 	</table>
 </div>
 <div>
+	<table>
+		<c:if test="${list != null}">
+			<c:forEach var="comments" items="${list}">
+    			 <tr>
+					<td width="150">
+						<div>${comments.c_userid}<br>
+						<font size="2" color="lightgray">${comments.c_date}</font>
+						</div>
+					</td>
+					<td width="550">
+						<div>${comments.c_comments}</div>
+					</td>
+					<td width="80">
+						<div id="btn" style="text-align:center;">
+							<a href="#">답변</a>
+							<a href="#" class="btnUpdateForm">수정</a>
+							<a href="#">삭제</a>
+						</div>
+					</td>
+				</tr>
+				<tr style="display: none;">
+					<td>
+						<textarea rows="1" cols="80">${comments.c_comments}</textarea>
+					</td>
+					<td>
+						<button type="button" class="btnUpdate">수정</button>
+						<button type="button">취소</button>
+					</td>
+				</tr>
+			</c:forEach>
+		</c:if>
+	</table>
 <form action="comments-comm-process.do" method="post">
 <input type="hidden" name="b_id" value="${bbs.bbsID}">
 	<table>
 		<tr>
 			<th>작성자</th>
-			<td><input type="text" name="userid" size="50"></td>
+			<td><input type="text" name="userid" size="10"></td>
 		</tr>
+	</table>
+	<table>
 		<tr>
 			<td>댓글</td>
 		</tr>
@@ -77,6 +112,12 @@
 
 </div>
 </div>
+
+<script>
+$(document).on('click', '.btnUpdateForm', function () {
+	$(this).parent().parent().parent().next().css('display', '');
+});
+</script>
 
 </body>
 </html>

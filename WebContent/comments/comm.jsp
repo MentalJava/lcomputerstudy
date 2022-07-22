@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>댓글 저장</title>
+<title></title>
 </head>
 <body>
 

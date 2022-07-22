@@ -32,12 +32,12 @@ public class CommDAO {
 		try {
 			conn = DBconnection.getConnection();
 			String query = new StringBuilder()
-					.append("SELECT        @ROWNUM := @ROWNUM - 1 AS ROWNUM, \n)")
-					.append("              ta.*\n")
-					.append("FROM          Comm ta\n")
-					.append("INNER JOIN    (SLECET @ROWNUM := (SELECT COUNT(*)-?+1 FROM Comm ta)) tb ON 1=1\n")
-					.append("ORDER BY      c_group DESC, c_order ASC\n")
-					.append("LIMIT         ?, ").append(Pagination.perPage).append("\n")
+					.append("SELECT		@ROWNUM := @ROWNUM - 1 AS ROWNUM,\n")
+					.append("			ta.*\n")
+					.append("From		comm ta\n")
+					.append("INNER JOIN (SELECT @rownum := (SELECT COUNT(*)-?+1 FROM comm ta)) tb ON 1=1\n")
+					.append("ORDER BY c_group DESC, c_order ASC\n")
+					.append("LIMIT		?, ").append(Pagination.perPage).append("\n")
 					.toString();
 			pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, pageNum);
@@ -144,5 +144,85 @@ public class CommDAO {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void deleteComments(Comm comm) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = DBconnection.getConnection();
+			String sql = "DELETE FROM comm WHERE c_id = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, comm.getC_id());
+			pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+	
+	public void editComments(Comm comm) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = DBconnection.getConnection();
+			String sql = "UPDATE comm SET c_userid = ?, c_comments = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, comm.getC_userid());
+			pstmt.setString(2, comm.getC_comments());
+			pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+	
+	public int getCount() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int count = 0;
+		
+		try {
+			conn = DBconnection.getConnection();
+			String query = "SELECT COUNT(*) count FROM comm";
+			
+			pstmt = conn.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				count = rs.getInt("count");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+				if(rs != null) rs.close();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return count;
 	}
 }

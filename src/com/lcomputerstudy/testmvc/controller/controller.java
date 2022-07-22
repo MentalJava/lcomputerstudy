@@ -175,12 +175,27 @@ public class controller extends HttpServlet {
 		case "/board-bbsdetail.do":
 			Bbs bbs1 = new Bbs();
 			bbs1.setBbsID(Integer.parseInt(request.getParameter("bbsid")));
-			
 			bbsService = BbsService.getInstance();
 			bbs1 = bbsService.getDetail(bbs1);
 			
+			String reqPage2 = request.getParameter("page");
+			if (reqPage2 != null) 
+				page = Integer.parseInt(reqPage2);
+			
+			CommService commService = CommService.getInstance();
+			int commcount = commService.getCount();
+			
+			pagination = new Pagination();
+			pagination.setPage(page);
+			pagination.setCount(commcount);
+			pagination.init();
+			
+			ArrayList<Comm> list2 = commService.getList(pagination);
+			
 			view = "board/bbsDetail";
 			request.setAttribute("bbs", bbs1);	
+			request.setAttribute("list", list2);
+			request.setAttribute("pagination", pagination);
 			break;
 			
 		case "/board-bbsedit.do":
@@ -227,7 +242,7 @@ public class controller extends HttpServlet {
 				comm.setC_userid(request.getParameter("userid"));
 				comm.setC_comments(request.getParameter("comments"));
 				
-				CommService commService = CommService.getInstance();
+				commService = CommService.getInstance();
 				commService.insertComments(comm);
 			}
 			isRedirected = true;

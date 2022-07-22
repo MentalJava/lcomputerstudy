@@ -1,7 +1,10 @@
 package com.lcomputerstudy.testmvc.service;
 
+import java.util.ArrayList;
+
 import com.lcomputerstudy.testmvc.dao.CommDAO;
 import com.lcomputerstudy.testmvc.vo.Comm;
+import com.lcomputerstudy.testmvc.vo.Pagination;
 
 public class CommService {
 	private static CommService service = null;
@@ -25,5 +28,13 @@ public class CommService {
 	
 	public void replyComments(Comm comm) {
 		dao.replyComments(comm);
+	}
+
+	public int getCount() {
+		return dao.getCount();
+	}
+
+	public ArrayList<Comm> getList(Pagination pagination) {
+		return dao.getList(pagination);
 	}
 }
