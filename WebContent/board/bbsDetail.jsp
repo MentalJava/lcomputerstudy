@@ -80,7 +80,7 @@
 						<textarea rows="1" cols="80">${comments.c_comments}</textarea>
 					</td>
 					<td>
-						<button type="button" class="btnUpdate">수정</button>
+						<button type="button" class="btnUpdate" c_id="${comments.c_userid}">수정</button>
 						<button type="button">취소</button>
 					</td>
 				</tr>
@@ -117,6 +117,23 @@
 $(document).on('click', '.btnUpdateForm', function () {
 	$(this).parent().parent().parent().next().css('display', '');
 });
+
+$(document).on('click', '.btnUpdate', function () {
+	let c_id = $(this).attr('c_id');
+	let c_comments = $(this).parent().prev().find('textarea').val();
+	let bbsid = $(this)
+	
+	$.ajax({
+	  	method: "POST",
+	  	url: "./board-bbsdetail.do",
+		data: { cid : c_id, com : c_comments }
+	})
+  	.done(function( msg ) {
+    	alert( "Data Saved: " + msg );
+  	});
+});
+
+
 </script>
 
 </body>

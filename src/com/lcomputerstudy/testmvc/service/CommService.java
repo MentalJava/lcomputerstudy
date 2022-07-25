@@ -3,6 +3,7 @@ package com.lcomputerstudy.testmvc.service;
 import java.util.ArrayList;
 
 import com.lcomputerstudy.testmvc.dao.CommDAO;
+import com.lcomputerstudy.testmvc.vo.Bbs;
 import com.lcomputerstudy.testmvc.vo.Comm;
 import com.lcomputerstudy.testmvc.vo.Pagination;
 
@@ -34,7 +35,7 @@ public class CommService {
 		return dao.getCount();
 	}
 
-	public ArrayList<Comm> getList(Pagination pagination) {
-		return dao.getList(pagination);
+	public ArrayList<Comm> getList(Pagination pagination, Bbs bbs1) {
+		return dao.getList(pagination, bbs1);
 	}
 }

@@ -22,12 +22,13 @@ public class CommDAO {
 		return commDao;
 	}
 	
-	public ArrayList<Comm> getList(Pagination pagination) {
+	public ArrayList<Comm> getList(Pagination pagination, Bbs bbs1) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		ArrayList<Comm>	list = null;
 		int pageNum = (pagination.getPage()-1)*Pagination.perPage;
+		int b_id = bbs1.getBbsID();
 		
 		try {
 			conn = DBconnection.getConnection();
@@ -36,18 +37,21 @@ public class CommDAO {
 					.append("			ta.*\n")
 					.append("From		comm ta\n")
 					.append("INNER JOIN (SELECT @rownum := (SELECT COUNT(*)-?+1 FROM comm ta)) tb ON 1=1\n")
+					.append("WHERE      b_id = ?\n")
 					.append("ORDER BY c_group DESC, c_order ASC\n")
 					.append("LIMIT		?, ").append(Pagination.perPage).append("\n")
 					.toString();
 			pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, pageNum);
-			pstmt.setInt(2, pageNum);
+			pstmt.setInt(2, b_id);
+			pstmt.setInt(3, pageNum);
 			rs = pstmt.executeQuery();
 			list = new ArrayList<Comm>();
 			
 			while(rs.next()) {
 				Comm comm = new Comm();
 				comm.setRownum(rs.getInt("ROWNUM"));
+				comm.setB_id(rs.getInt("b_id"));
 				comm.setC_id(rs.getInt("c_id"));
 				comm.setC_group(rs.getInt("c_group"));
 				comm.setC_order(rs.getInt("c_order"));

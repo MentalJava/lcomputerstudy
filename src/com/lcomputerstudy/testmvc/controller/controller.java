@@ -190,7 +190,7 @@ public class controller extends HttpServlet {
 			pagination.setCount(commcount);
 			pagination.init();
 			
-			ArrayList<Comm> list2 = commService.getList(pagination);
+			ArrayList<Comm> list2 = commService.getList(pagination, bbs1);
 			
 			view = "board/bbsDetail";
 			request.setAttribute("bbs", bbs1);	
@@ -235,8 +235,8 @@ public class controller extends HttpServlet {
 			break;
 			
 		case "/comments-comm-process.do":
-			Comm comm = new Comm();
 			String b_id = request.getParameter("b_id");
+			Comm comm = new Comm();
 			if(!(b_id.equals(""))) {
 				comm.setB_id(Integer.parseInt(b_id));
 				comm.setC_userid(request.getParameter("userid"));
