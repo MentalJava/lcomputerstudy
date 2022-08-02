@@ -180,11 +180,12 @@ public class CommDAO {
 		
 		try {
 			conn = DBconnection.getConnection();
-			String sql = "UPDATE comm SET c_userid = ?, c_comments = ?";
+			String sql = "UPDATE comm SET c_userid = ?, c_comments = ? WHERE c_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, comm.getC_userid());
 			pstmt.setString(2, comm.getC_comments());
+			pstmt.setInt(3, comm.getC_id());
 			pstmt.executeUpdate();
 			
 		} catch (Exception e) {

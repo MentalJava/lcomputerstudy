@@ -7,6 +7,38 @@
 <meta charset="UTF-8">
 <title>게시글 상세보기</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<style>
+ul {
+		width:500px;
+		height:50px;
+		margin-left:-45px;
+	 			
+}
+
+li {
+		list-style:none;
+		width:50px;
+		line-height:50px;
+		border:1px solid #ededed;
+		float:left;
+		text-align:center;
+		margin:0 5px;
+		border-radius:5px;
+}
+
+.btn {
+		background-color : white;
+		margin-left : 0%;
+		border : none;
+		width : 70px;
+		height : 50px;	
+		opacity: 0.6;
+  		transition: 0.3s;
+}
+.btn:hover {
+		opacity: 1
+}
+</style>
 </head>
 <body>
 <div>
@@ -47,16 +79,15 @@
 <div style="margin-left:1px;">
 	<table>
 		<tr>
-			<td><a href="board-bbslist.do" class="btn btn-primary">목록</a></td>
-			<td><a href="board-bbsedit.do?bbsid=${bbs.bbsID}" class="btn btn-primary">수정</a></td>
-			<td><a href="board-bbsdelete-process.do?bbsid=${bbs.bbsID}" class="btn btn-primary">삭제</a></td>
-			<td><a href="board-bbscontents.do?group=${bbs.bbsgroup}&order=${bbs.bbsorder}&depth=${bbs.bbsdepth}" class="btn btn-primary">답글쓰기</a>
+			<td><a href="board-bbslist.do" class="btn">목록</a></td>
+			<td><a href="board-bbsedit.do?bbsid=${bbs.bbsID}" class="btn">수정</a></td>
+			<td><a href="board-bbsdelete-process.do?bbsid=${bbs.bbsID}" class="btn">삭제</a></td>
+			<td><a href="board-bbscontents.do?group=${bbs.bbsgroup}&order=${bbs.bbsorder}&depth=${bbs.bbsdepth}" class="btn">답글쓰기</a>
 		</tr>
 	</table>
 </div>
 <div>
-	<table>
-		<c:if test="${list != null}">
+	<table id="tblComments">
 			<c:forEach var="comments" items="${list}">
     			 <tr>
 					<td width="150">
@@ -68,10 +99,10 @@
 						<div>${comments.c_comments}</div>
 					</td>
 					<td width="80">
-						<div id="btn" style="text-align:center;">
-							<a href="#">답변</a>
+						<div class="btn" style="text-align:center;">
+							<a href="#" class="btnReply">답변</a>
 							<a href="#" class="btnUpdateForm">수정</a>
-							<a href="#">삭제</a>
+							<a href="#" class="btnDelete" c_id="${comments.c_id}">삭제</a>
 						</div>
 					</td>
 				</tr>
@@ -80,13 +111,44 @@
 						<textarea rows="1" cols="80">${comments.c_comments}</textarea>
 					</td>
 					<td>
-						<button type="button" class="btnUpdate" c_id="${comments.c_userid}">수정</button>
-						<button type="button">취소</button>
+						<button type="button" class="btnUpdate" c_userid="${comments.c_userid}" c_id="${comments.c_id}">수정</button>
+						<button type="button" >취소</button>
 					</td>
 				</tr>
 			</c:forEach>
-		</c:if>
 	</table>
+	<div>
+	<ul>
+		<c:choose>
+			<c:when test="${pagination1.prevPage ge 1}">
+				<li>
+					<a href="board-bbsdetail.do?bbsid=${bbs.bbsID}?page=${pagination1.prevPage}">◀</a>
+				</li>
+			</c:when>
+		</c:choose>
+		<c:forEach var="i" begin="${pagination1.startPage}" end="${pagination1.endPage}" step="1">
+				<c:choose>
+					<c:when test="${pagination1.page eq i}">		
+						<li style="background-color:#ededed;">
+							<span>${i}</span>
+						</li>
+					</c:when>
+					<c:when test="${pagination1.page ne i}">
+						<li>
+							<a href="board-bbsdetail.do?bbsid=${bbs.bbsID}?page=${i}">${i}</a>						
+						</li>
+					</c:when>
+				</c:choose>
+		</c:forEach>
+		<c:choose>
+				<c:when test="${ pagination1.nextPage lt pagination1.lastPage }">
+					<li>
+						<a href="board-bbsdetail.do?bbsid=${bbs.bbsID}?page=${pagination1.nextPage}">▶</a>
+					</li>
+				</c:when>
+		</c:choose> 
+	</ul>
+</div>
 <form action="comments-comm-process.do" method="post">
 <input type="hidden" name="b_id" value="${bbs.bbsID}">
 	<table>
@@ -120,20 +182,32 @@ $(document).on('click', '.btnUpdateForm', function () {
 
 $(document).on('click', '.btnUpdate', function () {
 	let c_id = $(this).attr('c_id');
-	let c_comments = $(this).parent().prev().find('textarea').val();
-	let bbsid = $(this)
+	let c_userid = $(this).attr('c_userid');
+	let c_comments = $(this).parent().prev().find('textarea').val(); 
+	let b_id = ${bbs.bbsID};
 	
 	$.ajax({
 	  	method: "POST",
-	  	url: "./board-bbsdetail.do",
-		data: { cid : c_id, com : c_comments }
+	  	url: "./aj-comment-update.do",
+		data: { cid : c_id, c_uid : c_userid, com : c_comments, bbsid : b_id }
 	})
-  	.done(function( msg ) {
-    	alert( "Data Saved: " + msg );
+  	.done(function( html ) {
+  		$('#tblComments').html(html);
   	});
 });
 
-
+$(document).on('click', '.btnDelete', function () {
+	let c_id = $(this).attr('c_id');
+	
+	$.ajax({
+		method : "POST",
+		url : "./aj-comment-delete.do",
+		data : {cid : c_id}
+	})
+	.done(function( html ) {
+		$('#tblComments').html(html);
+	});
+});
 </script>
 
 </body>

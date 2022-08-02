@@ -38,4 +38,12 @@ public class CommService {
 	public ArrayList<Comm> getList(Pagination pagination, Bbs bbs1) {
 		return dao.getList(pagination, bbs1);
 	}
+
+	public void editComments(Comm comm) {
+		dao.editComments(comm);
+	}
+
+	public void deleteComments(Comm comm) {
+		dao.deleteComments(comm);
+	}
 }

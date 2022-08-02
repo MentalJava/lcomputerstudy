@@ -197,6 +197,39 @@ public class controller extends HttpServlet {
 			request.setAttribute("list", list2);
 			request.setAttribute("pagination", pagination);
 			break;
+		case "/aj-comment-update.do":
+			Comm comm = new Comm();
+			comm.setC_userid(request.getParameter("c_uid"));	
+			comm.setC_comments(request.getParameter("com"));
+			comm.setB_id(Integer.parseInt(request.getParameter("bbsid")));
+			comm.setC_id(Integer.parseInt(request.getParameter("cid")));
+			
+			commService = CommService.getInstance();
+			commService.editComments(comm);
+			
+			bbs = new Bbs();
+			bbs.setBbsID(Integer.parseInt(request.getParameter("bbsid")));
+			bbsService = BbsService.getInstance();
+			bbs = bbsService.getDetail(bbs);
+			
+			String reqPage3 = request.getParameter("page");
+			if (reqPage3 != null) 
+				page = Integer.parseInt(reqPage3);
+			
+			commService = CommService.getInstance();
+			int commcounts = commService.getCount();
+			
+			pagination = new Pagination();
+			pagination.setPage(page);
+			pagination.setCount(commcounts);
+			pagination.init();
+			
+			ArrayList<Comm> list3 = commService.getList(pagination, bbs);
+			
+			
+			view = "comments/aj-comment-list";
+			request.setAttribute("list", list3);
+			break;
 			
 		case "/board-bbsedit.do":
 			Bbs bbs3 = new Bbs();
@@ -210,17 +243,17 @@ public class controller extends HttpServlet {
 			break;
 			
 		case "/board-bbsedit-process.do":
-			Bbs bbs2 = new Bbs();
-			bbs2.setBbsID(Integer.parseInt(request.getParameter("bbsid")));
-			bbs2.setBbsUserID(request.getParameter("userid"));
-			bbs2.setBbsTitle(request.getParameter("title"));
-			bbs2.setBbsContents(request.getParameter("contents"));
+			bbs = new Bbs();
+			bbs.setBbsID(Integer.parseInt(request.getParameter("bbsid")));
+			bbs.setBbsUserID(request.getParameter("userid"));
+			bbs.setBbsTitle(request.getParameter("title"));
+			bbs.setBbsContents(request.getParameter("contents"));
 			
 			bbsService = BbsService.getInstance();
-			bbsService.getEdit(bbs2);
+			bbsService.getEdit(bbs);
 			
 			view = "board/bbsEdit-result";
-			request.setAttribute("bbs", bbs2);
+			request.setAttribute("bbs", bbs);
 			break;
 			
 		case "/board-bbsdelete-process.do":
@@ -234,9 +267,21 @@ public class controller extends HttpServlet {
 			view = "board/bbsDelete";
 			break;
 			
+		case "/aj-comment-delete.do":
+			comm = new Comm();
+			
+			comm.setC_id(Integer.parseInt(request.getParameter("cid")));
+			
+			commService = CommService.getInstance();
+			commService.deleteComments(comm);
+			
+			view = "board/bbsDetail";
+			break;
+			
 		case "/comments-comm-process.do":
 			String b_id = request.getParameter("b_id");
-			Comm comm = new Comm();
+			
+			comm = new Comm();
 			if(!(b_id.equals(""))) {
 				comm.setB_id(Integer.parseInt(b_id));
 				comm.setC_userid(request.getParameter("userid"));
