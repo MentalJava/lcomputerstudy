@@ -116,19 +116,18 @@ public class CommDAO {
 			conn = DBconnection.getConnection();
 			String sql = new StringBuffer()
 					.append("INSERT INTO comm")
-					.append("(b_id, c_id, c_group, c_order, c_depth, c_userid, c_comments, c_date)")
-					.append("VALUE(?, ?, ?, ?, ?, ?, ?, now()")
+					.append("(b_id, c_group, c_order, c_depth, c_userid, c_comments, c_date)")
+					.append("VALUE(?, ?, ?, ?, ?, ?, now()")
 					.toString();
 			int rOrder = comm.getC_order()+1;
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, comm.getB_id());
-			pstmt.setInt(2, comm.getC_id());
-			pstmt.setInt(3, comm.getC_group());
-			pstmt.setInt(4, rOrder);
-			pstmt.setInt(5, comm.getC_depth()+1);
-			pstmt.setString(6, comm.getC_userid());
-			pstmt.setString(7, comm.getC_comments());
+			pstmt.setInt(2, comm.getC_group());
+			pstmt.setInt(3, rOrder);
+			pstmt.setInt(4, comm.getC_depth()+1);
+			pstmt.setString(5, comm.getC_userid());
+			pstmt.setString(6, comm.getC_comments());
 			pstmt.executeUpdate();
 			pstmt.close();
 			

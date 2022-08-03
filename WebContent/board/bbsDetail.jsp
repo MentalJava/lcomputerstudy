@@ -100,7 +100,7 @@ li {
 					</td>
 					<td width="80">
 						<div class="btn" style="text-align:center;">
-							<a href="#" class="btnReply">답변</a>
+							<a href="#" class="btnReplyForm">답변</a>
 							<a href="#" class="btnUpdateForm">수정</a>
 							<a href="#" class="btnDelete" c_id="${comments.c_id}">삭제</a>
 						</div>
@@ -112,7 +112,16 @@ li {
 					</td>
 					<td>
 						<button type="button" class="btnUpdate" c_userid="${comments.c_userid}" c_id="${comments.c_id}">수정</button>
-						<button type="button" >취소</button>
+						<button type="button" class="btnCancle">취소</button>
+					</td>
+				</tr>
+				<tr style="display:none;">
+					<td>	
+						<textarea rows="1" name="c_comments" cols="80"></textarea>
+					</td>
+					<td>
+						<button type="button" class="btnReply" c_group="${comments.c_group}" c_order="${comments.c_order}" c_depth="${comments.c_depth}" c_comments="${comments.c_comments}">저장</button>
+						<button type="button" class="btncancle">취소</button>
 					</td>
 				</tr>
 			</c:forEach>
@@ -180,6 +189,10 @@ $(document).on('click', '.btnUpdateForm', function () {
 	$(this).parent().parent().parent().next().css('display', '');
 });
 
+$(document).on('click', '.btnCancel', function () {
+	$(this).parent().parent().css('display', 'none');
+});
+
 $(document).on('click', '.btnUpdate', function () {
 	let c_id = $(this).attr('c_id');
 	let c_userid = $(this).attr('c_userid');
@@ -198,16 +211,38 @@ $(document).on('click', '.btnUpdate', function () {
 
 $(document).on('click', '.btnDelete', function () {
 	let c_id = $(this).attr('c_id');
+	let b_id = ${bbs.bbsID};
 	
 	$.ajax({
 		method : "POST",
 		url : "./aj-comment-delete.do",
-		data : {cid : c_id}
+		data : {cid : c_id, bbsid : b_id}
 	})
 	.done(function( html ) {
 		$('#tblComments').html(html);
 	});
 });
+
+$(document).on('click', '.btnReplyForm', function () {
+	$(this).parent().parent().parent().next().next().css('display', '');
+});
+
+$(document).on('click', '.btnReply', function () {
+	let cComments = $(this).attr("c_comments");
+	let cGroup = $(this).attr('c_group');
+	let cOrder = $(this).attr('c_order');
+	let cDepth = $(this).attr('c_depth');
+	
+	$.ajax({
+		method : "POST",
+		url : "./aj-comment-reply.do",
+		data : {c_comments : cComments, c_group : cGroup, c_order : cOrder, c_depth : cDepth}
+	})
+	.done(function(html) {
+		$('#tblComments').html(html);
+	});
+});
+
 </script>
 
 </body>

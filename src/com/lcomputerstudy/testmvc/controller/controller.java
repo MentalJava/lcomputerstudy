@@ -275,7 +275,43 @@ public class controller extends HttpServlet {
 			commService = CommService.getInstance();
 			commService.deleteComments(comm);
 			
-			view = "board/bbsDetail";
+			bbs = new Bbs();
+			bbs.setBbsID(Integer.parseInt(request.getParameter("bbsid")));
+			bbsService = BbsService.getInstance();
+			bbs = bbsService.getDetail(bbs);
+			
+			String reqPage4 = request.getParameter("page");
+			if (reqPage4 != null) 
+				page = Integer.parseInt(reqPage4);
+			
+			commService = CommService.getInstance();
+			commcounts = commService.getCount();
+			
+			pagination = new Pagination();
+			pagination.setPage(page);
+			pagination.setCount(commcounts);
+			pagination.init();
+			
+			ArrayList<Comm> list4 = commService.getList(pagination, bbs);
+			
+			
+			view = "comments/aj-comment-list";
+			request.setAttribute("list", list4);
+			break;
+			
+		case "/aj-comment-reply.do":
+			String cGroup = request.getParameter("c_group");
+			
+			comm = new Comm();
+			if(!(cGroup.equals(""))) {
+				comm.setC_comments(request.getParameter("c_comments"));
+				comm.setC_group(Integer.parseInt(request.getParameter("c_group")));
+				comm.setC_order(Integer.parseInt(request.getParameter("c_order")));
+				comm.setC_depth(Integer.parseInt(request.getParameter("c_depth")));
+				commService = CommService.getInstance();
+				commService.replyComments(comm);
+			}
+			view = "board-bbsdetail.do?bbsid="+comm.getB_id();
 			break;
 			
 		case "/comments-comm-process.do":
@@ -305,7 +341,10 @@ public class controller extends HttpServlet {
 
 
 	String checkSession(HttpServletRequest request, HttpServletResponse response, String command) {
-HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
+		
+		User user = (User)session.getAttribute("user");
+		user.getU_id()
 		
 		String[] authList = {
 				"/user-list.do"
