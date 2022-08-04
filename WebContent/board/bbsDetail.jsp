@@ -100,9 +100,15 @@ li {
 					</td>
 					<td width="80">
 						<div class="btn" style="text-align:center;">
+						<%
+						 	if(session.getAttribute("user") != null) {
+						%>
 							<a href="#" class="btnReplyForm">답변</a>
 							<a href="#" class="btnUpdateForm">수정</a>
 							<a href="#" class="btnDelete" c_id="${comments.c_id}">삭제</a>
+						<%
+						 	}
+						%>
 						</div>
 					</td>
 				</tr>
@@ -112,7 +118,7 @@ li {
 					</td>
 					<td>
 						<button type="button" class="btnUpdate" c_userid="${comments.c_userid}" c_id="${comments.c_id}">수정</button>
-						<button type="button" class="btnCancle">취소</button>
+						<button type="button" class="btnCancel">취소</button>
 					</td>
 				</tr>
 				<tr style="display:none;">
@@ -160,12 +166,6 @@ li {
 </div>
 <form action="comments-comm-process.do" method="post">
 <input type="hidden" name="b_id" value="${bbs.bbsID}">
-	<table>
-		<tr>
-			<th>작성자</th>
-			<td><input type="text" name="userid" size="10"></td>
-		</tr>
-	</table>
 	<table>
 		<tr>
 			<td>댓글</td>

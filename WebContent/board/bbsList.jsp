@@ -116,7 +116,14 @@ li {
 	</ul>
 </div>
 <div>
+	<%
+	 	if(session.getAttribute("user") != null) {
+	%>
 		<button class="button" onclick="location.href='board-bbscontents.do'">글등록</button>
+		<button class="button" onclick="location.href='logout.do'">로그아웃</button>
+	<%
+	 	}	
+	%>
 </div>
 </body>
 </html>

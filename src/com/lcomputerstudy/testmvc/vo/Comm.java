@@ -10,7 +10,16 @@ public class Comm {
 	private String c_userid;
 	private String c_date;
 	private String c_comments;
+	private User user;
 	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public int getC_id() {
 		return c_id;
 	}

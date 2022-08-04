@@ -150,9 +150,11 @@ public class controller extends HttpServlet {
 			break;
 			
 		case "/board-bbscontents-process.do":
+			session = request.getSession();
+			user = (User)session.getAttribute("user");
 			Bbs bbs = new Bbs();
 			String pGroup = request.getParameter("bbsgroup");
-			bbs.setBbsUserID(request.getParameter("userid"));
+			bbs.setUser(user);
 			bbs.setBbsTitle(request.getParameter("title"));
 			bbs.setBbsContents(request.getParameter("contents"));
 			
@@ -170,13 +172,18 @@ public class controller extends HttpServlet {
 			
 			view = "board/bbsResult";
 			request.setAttribute("bbs", bbs);
+			request.setAttribute("user", user);
 			break;
 			
-		case "/board-bbsdetail.do":
+		case "/board-bbsdetail.do":	
 			Bbs bbs1 = new Bbs();
 			bbs1.setBbsID(Integer.parseInt(request.getParameter("bbsid")));
 			bbsService = BbsService.getInstance();
 			bbs1 = bbsService.getDetail(bbs1);
+			
+			session = request.getSession();
+			user = (User)session.getAttribute("user");
+			bbs1.setUser(user);
 			
 			String reqPage2 = request.getParameter("page");
 			if (reqPage2 != null) 
@@ -196,6 +203,7 @@ public class controller extends HttpServlet {
 			request.setAttribute("bbs", bbs1);	
 			request.setAttribute("list", list2);
 			request.setAttribute("pagination", pagination);
+			request.setAttribute("user", user);
 			break;
 		case "/aj-comment-update.do":
 			Comm comm = new Comm();
@@ -300,10 +308,14 @@ public class controller extends HttpServlet {
 			break;
 			
 		case "/aj-comment-reply.do":
+			session = request.getSession();
+			user = (User)session.getAttribute("user");
+			
 			String cGroup = request.getParameter("c_group");
 			
 			comm = new Comm();
 			if(!(cGroup.equals(""))) {
+				comm.setUser(user);
 				comm.setC_comments(request.getParameter("c_comments"));
 				comm.setC_group(Integer.parseInt(request.getParameter("c_group")));
 				comm.setC_order(Integer.parseInt(request.getParameter("c_order")));
@@ -315,12 +327,15 @@ public class controller extends HttpServlet {
 			break;
 			
 		case "/comments-comm-process.do":
+			session = request.getSession();
+			user = (User)session.getAttribute("user");
+			
 			String b_id = request.getParameter("b_id");
 			
 			comm = new Comm();
 			if(!(b_id.equals(""))) {
 				comm.setB_id(Integer.parseInt(b_id));
-				comm.setC_userid(request.getParameter("userid"));
+				comm.setUser(user);
 				comm.setC_comments(request.getParameter("comments"));
 				
 				commService = CommService.getInstance();
@@ -328,6 +343,7 @@ public class controller extends HttpServlet {
 			}
 			isRedirected = true;
 			view = "board-bbsdetail.do?bbsid="+comm.getB_id();
+			request.setAttribute("user", user);
 			break;
 		}
 		
@@ -342,9 +358,6 @@ public class controller extends HttpServlet {
 
 	String checkSession(HttpServletRequest request, HttpServletResponse response, String command) {
 		HttpSession session = request.getSession();
-		
-		User user = (User)session.getAttribute("user");
-		user.getU_id()
 		
 		String[] authList = {
 				"/user-list.do"

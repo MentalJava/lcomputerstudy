@@ -11,7 +11,16 @@ public class Bbs {
 	private int bbsorder;
 	private int bbsdepth;
 	private int bbsgroup;
+	private User user;
 	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public int getBbsorder() {
 		return bbsorder;
 	}

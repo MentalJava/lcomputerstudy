@@ -16,10 +16,6 @@
 <input type="hidden" name="bbsdepth" value="${bbs.bbsdepth}">
 		<table style="width:550px">
 			<tr>
-				<td>이름</td>
-				<td><input type="text" name="userid" size="50"></td>
-			</tr>
-			<tr>
 				<td>제목</td>
 				<td><input type="text" name="title" size="50"></td>
 			</tr>

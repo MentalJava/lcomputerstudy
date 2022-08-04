@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import com.lcomputerstudy.testmvc.database.DBconnection;
 import com.lcomputerstudy.testmvc.vo.Pagination;
+import com.lcomputerstudy.testmvc.vo.User;
 import com.lcomputerstudy.testmvc.vo.Bbs;
 
 public class BbsDAO {
@@ -71,17 +72,20 @@ public class BbsDAO {
 }
 	
 	public void insertBbs(Bbs bbs) {
+		User user = bbs.getUser();
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		
 		try {
 			conn = DBconnection.getConnection();
-			String sql = "INSERT INTO bbs(bbstitle, bbsContents, bbsViews, bbsUserID, bbsDate, bbsorder, bbsdepth, bbsgroup) VALUE(?, ?, 0, ?, now(), 1, 0, ?)";
+			String sql = "INSERT INTO bbs(bbstitle, bbsContents, bbsViews, bbsUserID, bbsDate, bbsorder, bbsdepth, bbsgroup, bbsuser) VALUE(?, ?, 0, ?, now(), 1, 0, ?, ?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, bbs.getBbsTitle());
 			pstmt.setString(2, bbs.getBbsContents());
-			pstmt.setString(3, bbs.getBbsUserID());
+			pstmt.setString(3, user.getU_id());
 			pstmt.setInt(4, bbs.getBbsgroup());
+			pstmt.setInt(5, user.getU_idx());
 			pstmt.executeUpdate();
 			pstmt.close();
 			
@@ -103,23 +107,25 @@ public class BbsDAO {
 	public void replyBbs(Bbs bbs) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		User user = bbs.getUser();
 		
 		try {
 			conn = DBconnection.getConnection();
 			String sql = new StringBuffer()
 					.append("INSERT INTO bbs")
-					.append("(bbstitle, bbsContents, bbsViews, bbsUserID, bbsDate, bbsorder, bbsdepth, bbsgroup)")
-					.append("VALUE(?, ?, 0, ?, now(), ?, ?, ?)")
+					.append("(bbstitle, bbsContents, bbsViews, bbsUserID, bbsDate, bbsorder, bbsdepth, bbsgroup, bbsuser)")
+					.append("VALUE(?, ?, 0, ?, now(), ?, ?, ?, ?)")
 					.toString();
 			int pOrder = bbs.getBbsorder()+1;
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, bbs.getBbsTitle());
 			pstmt.setString(2, bbs.getBbsContents());
-			pstmt.setString(3, bbs.getBbsUserID());
+			pstmt.setString(3, user.getU_id());
 			pstmt.setInt(4, pOrder);
 			pstmt.setInt(5, bbs.getBbsdepth()+1);
 			pstmt.setInt(6, bbs.getBbsgroup());
+			pstmt.setInt(7, user.getU_idx());
 			pstmt.executeUpdate();
 			pstmt.close();
 			
@@ -255,7 +261,14 @@ public class BbsDAO {
 			pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}	
+		} finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();	
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
 }
 
