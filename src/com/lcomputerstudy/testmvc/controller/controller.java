@@ -177,13 +177,14 @@ public class controller extends HttpServlet {
 			
 		case "/board-bbsdetail.do":	
 			Bbs bbs1 = new Bbs();
-			bbs1.setBbsID(Integer.parseInt(request.getParameter("bbsid")));
-			bbsService = BbsService.getInstance();
-			bbs1 = bbsService.getDetail(bbs1);
-			
 			session = request.getSession();
 			user = (User)session.getAttribute("user");
+			
 			bbs1.setUser(user);
+			bbs1.setBbsID(Integer.parseInt(request.getParameter("bbsid")));
+			
+			bbsService = BbsService.getInstance();
+			bbs1 = bbsService.getDetail(bbs1);
 			
 			String reqPage2 = request.getParameter("page");
 			if (reqPage2 != null) 
@@ -310,11 +311,12 @@ public class controller extends HttpServlet {
 		case "/aj-comment-reply.do":
 			session = request.getSession();
 			user = (User)session.getAttribute("user");
-			
 			String cGroup = request.getParameter("c_group");
+			
 			
 			comm = new Comm();
 			if(!(cGroup.equals(""))) {
+				comm.setB_id(Integer.parseInt(request.getParameter("b_id")));
 				comm.setUser(user);
 				comm.setC_comments(request.getParameter("c_comments"));
 				comm.setC_group(Integer.parseInt(request.getParameter("c_group")));
@@ -323,7 +325,8 @@ public class controller extends HttpServlet {
 				commService = CommService.getInstance();
 				commService.replyComments(comm);
 			}
-			view = "board-bbsdetail.do?bbsid="+comm.getB_id();
+			view = "comments/aj-comment-list";
+			request.setAttribute("user", user);
 			break;
 			
 		case "/comments-comm-process.do":
@@ -342,7 +345,7 @@ public class controller extends HttpServlet {
 				commService.insertComments(comm);
 			}
 			isRedirected = true;
-			view = "board-bbsdetail.do?bbsid="+comm.getB_id();
+			view = "comments/aj-comment-list";
 			request.setAttribute("user", user);
 			break;
 		}

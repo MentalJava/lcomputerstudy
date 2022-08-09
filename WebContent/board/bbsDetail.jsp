@@ -100,15 +100,11 @@ li {
 					</td>
 					<td width="80">
 						<div class="btn" style="text-align:center;">
-						<%
-						 	if(session.getAttribute("user") != null) {
-						%>
-							<a href="#" class="btnReplyForm">답변</a>
-							<a href="#" class="btnUpdateForm">수정</a>
-							<a href="#" class="btnDelete" c_id="${comments.c_id}">삭제</a>
-						<%
-						 	}
-						%>
+							<c:if test="${sessionScope.user ne null}">
+								<a href="#" class="btnReplyForm">답변</a>
+								<a href="#" class="btnUpdateForm">수정</a>
+								<a href="#" class="btnDelete" c_id="${comments.c_id}">삭제</a>
+							</c:if>
 						</div>
 					</td>
 				</tr>
@@ -126,7 +122,7 @@ li {
 						<textarea rows="1" name="c_comments" cols="80"></textarea>
 					</td>
 					<td>
-						<button type="button" class="btnReply" c_group="${comments.c_group}" c_order="${comments.c_order}" c_depth="${comments.c_depth}" c_comments="${comments.c_comments}">저장</button>
+						<button type="button" class="btnReply" c_group="${comments.c_group}" c_order="${comments.c_order}" c_depth="${comments.c_depth}">저장</button>
 						<button type="button" class="btncancle">취소</button>
 					</td>
 				</tr>
@@ -135,20 +131,20 @@ li {
 	<div>
 	<ul>
 		<c:choose>
-			<c:when test="${pagination1.prevPage ge 1}">
+			<c:when test="${pagination.prevPage ge 1}">
 				<li>
-					<a href="board-bbsdetail.do?bbsid=${bbs.bbsID}?page=${pagination1.prevPage}">◀</a>
+					<a href="board-bbsdetail.do?bbsid=${bbs.bbsID}?page=${pagination.prevPage}">◀</a>
 				</li>
 			</c:when>
 		</c:choose>
-		<c:forEach var="i" begin="${pagination1.startPage}" end="${pagination1.endPage}" step="1">
+		<c:forEach var="i" begin="${pagination.startPage}" end="${pagination.endPage}" step="1">
 				<c:choose>
-					<c:when test="${pagination1.page eq i}">		
+					<c:when test="${pagination.page eq i}">		
 						<li style="background-color:#ededed;">
 							<span>${i}</span>
 						</li>
 					</c:when>
-					<c:when test="${pagination1.page ne i}">
+					<c:when test="${pagination.page ne i}">
 						<li>
 							<a href="board-bbsdetail.do?bbsid=${bbs.bbsID}?page=${i}">${i}</a>						
 						</li>
@@ -156,9 +152,9 @@ li {
 				</c:choose>
 		</c:forEach>
 		<c:choose>
-				<c:when test="${ pagination1.nextPage lt pagination1.lastPage }">
+				<c:when test="${pagination.nextPage lt pagination.lastPage}">
 					<li>
-						<a href="board-bbsdetail.do?bbsid=${bbs.bbsID}?page=${pagination1.nextPage}">▶</a>
+						<a href="board-bbsdetail.do?bbsid=${bbs.bbsID}?page=${pagination.nextPage}">▶</a>
 					</li>
 				</c:when>
 		</c:choose> 
@@ -228,15 +224,15 @@ $(document).on('click', '.btnReplyForm', function () {
 });
 
 $(document).on('click', '.btnReply', function () {
-	let cComments = $(this).attr("c_comments");
+	let cComments = $(this).parent().prev().find('textarea').val();
 	let cGroup = $(this).attr('c_group');
 	let cOrder = $(this).attr('c_order');
 	let cDepth = $(this).attr('c_depth');
-	
+	let bid = ${bbs.bbsID};
 	$.ajax({
 		method : "POST",
 		url : "./aj-comment-reply.do",
-		data : {c_comments : cComments, c_group : cGroup, c_order : cOrder, c_depth : cDepth}
+		data : {b_id : bid, c_comments : cComments, c_group : cGroup, c_order : cOrder, c_depth : cDepth}
 	})
 	.done(function(html) {
 		$('#tblComments').html(html);

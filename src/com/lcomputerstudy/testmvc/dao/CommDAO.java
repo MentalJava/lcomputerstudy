@@ -136,7 +136,7 @@ public class CommDAO {
 			pstmt.executeUpdate();
 			pstmt.close();
 			
-			pstmt = conn.prepareStatement("UPDATE comm SET c_order = c_order + 1 WHERE c_group = ? AND c_order >= ? AND c_id != last_insert_id();");
+			pstmt = conn.prepareStatement("UPDATE comm SET c_order = c_order+1 WHERE c_group = ? AND c_order >= ? AND c_id != last_insert_id();");
 			pstmt.setInt(1, comm.getC_group());
 			pstmt.setInt(2, rOrder);
 			pstmt.executeUpdate();
