@@ -5,7 +5,13 @@
 			<c:forEach var="comments" items="${list}">
     			 <tr>
 					<td width="150">
-						<div>${comments.c_userid}<br>
+						<div>	
+							<c:if test="${comments.c_depth > 0}">
+								<c:forEach begin="1" end="${comments.c_depth}">
+									&nbsp;&nbsp;
+								</c:forEach>
+								┖
+							</c:if>${comments.c_userid}<br>
 						<font size="2" color="lightgray">${comments.c_date}</font>
 						</div>
 					</td>

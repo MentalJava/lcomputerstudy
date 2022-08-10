@@ -185,6 +185,7 @@ public class controller extends HttpServlet {
 			
 			bbsService = BbsService.getInstance();
 			bbs1 = bbsService.getDetail(bbs1);
+			bbsService.viewCount(bbs1);
 			
 			String reqPage2 = request.getParameter("page");
 			if (reqPage2 != null) 
@@ -325,8 +326,29 @@ public class controller extends HttpServlet {
 				commService = CommService.getInstance();
 				commService.replyComments(comm);
 			}
+			
+			bbs = new Bbs();
+			bbs.setBbsID(Integer.parseInt(request.getParameter("b_id")));
+			bbsService = BbsService.getInstance();
+			bbs = bbsService.getDetail(bbs);
+			
+			reqPage3 = request.getParameter("page");
+			if (reqPage3 != null) 
+				page = Integer.parseInt(reqPage3);
+			
+			commService = CommService.getInstance();
+			commcounts = commService.getCount();
+			
+			pagination = new Pagination();
+			pagination.setPage(page);
+			pagination.setCount(commcounts);
+			pagination.init();
+			
+			list3 = commService.getList(pagination, bbs);
+			
 			view = "comments/aj-comment-list";
 			request.setAttribute("user", user);
+			request.setAttribute("list", list3);
 			break;
 			
 		case "/comments-comm-process.do":
@@ -344,6 +366,7 @@ public class controller extends HttpServlet {
 				commService = CommService.getInstance();
 				commService.insertComments(comm);
 			}
+			
 			isRedirected = true;
 			view = "comments/aj-comment-list";
 			request.setAttribute("user", user);

@@ -74,7 +74,15 @@ li {
         	 <c:forEach items= "${list1}" var="item" varStatus="status">
             	<tr>
             		<td>${item.rownum}</td>
-            		<td><a href="board-bbsdetail.do?bbsid=${item.bbsID}">${item.bbsTitle}</a></td>
+            		<td>
+            			<c:if test="${item.bbsdepth > 0}">
+            				<c:forEach begin="1" end="${item.bbsdepth}">
+            					&nbsp;&nbsp;
+            				</c:forEach>
+            				┖
+            			</c:if>
+            			<a href="board-bbsdetail.do?bbsid=${item.bbsID}">${item.bbsTitle}</a>
+            		</td>
             		<td>${item.bbsUserID}</td>
             		<td>${item.bbsDate}</td>
             		<td>${item.bbsViews}</td>

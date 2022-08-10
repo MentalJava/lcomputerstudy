@@ -50,4 +50,9 @@ public class BbsService {
 	public void replyBbs(Bbs bbs) {
 		dao.replyBbs(bbs);
 	}
+
+	public void viewCount(Bbs bbs1) {
+		dao.viewCount(bbs1.getBbsID());
+		
+	}
 }

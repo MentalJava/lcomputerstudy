@@ -96,7 +96,11 @@
 				</c:when>
 			</c:choose> 
 		</ul>
-		
 	</div>
+	<div>
+		<a href="board-bbslist.do">게시판목록</a>
+		<a href="logout.do">로그아웃</a>
+	</div>
+	
 </body>
 </html>

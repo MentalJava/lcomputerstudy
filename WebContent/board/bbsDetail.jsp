@@ -80,9 +80,11 @@ li {
 	<table>
 		<tr>
 			<td><a href="board-bbslist.do" class="btn">목록</a></td>
-			<td><a href="board-bbsedit.do?bbsid=${bbs.bbsID}" class="btn">수정</a></td>
-			<td><a href="board-bbsdelete-process.do?bbsid=${bbs.bbsID}" class="btn">삭제</a></td>
-			<td><a href="board-bbscontents.do?group=${bbs.bbsgroup}&order=${bbs.bbsorder}&depth=${bbs.bbsdepth}" class="btn">답글쓰기</a>
+			<c:if test="${sessionScope.user ne null}">
+				<td><a href="board-bbsedit.do?bbsid=${bbs.bbsID}" class="btn">수정</a></td>
+				<td><a href="board-bbsdelete-process.do?bbsid=${bbs.bbsID}" class="btn">삭제</a></td>
+				<td><a href="board-bbscontents.do?group=${bbs.bbsgroup}&order=${bbs.bbsorder}&depth=${bbs.bbsdepth}" class="btn">답글쓰기</a></td>
+			</c:if>
 		</tr>
 	</table>
 </div>
@@ -91,7 +93,13 @@ li {
 			<c:forEach var="comments" items="${list}">
     			 <tr>
 					<td width="150">
-						<div>${comments.c_userid}<br>
+						<div>	
+							<c:if test="${comments.c_depth > 0}">
+								<c:forEach begin="1" end="${comments.c_depth}">
+									&nbsp;&nbsp;
+								</c:forEach>
+								┖
+							</c:if>${comments.c_userid}<br>
 						<font size="2" color="lightgray">${comments.c_date}</font>
 						</div>
 					</td>
@@ -133,7 +141,7 @@ li {
 		<c:choose>
 			<c:when test="${pagination.prevPage ge 1}">
 				<li>
-					<a href="board-bbsdetail.do?bbsid=${bbs.bbsID}?page=${pagination.prevPage}">◀</a>
+					<a href="board-bbsdetail.do?bbsid=${bbs.bbsID}&page=${pagination.prevPage}">◀</a>
 				</li>
 			</c:when>
 		</c:choose>
@@ -146,7 +154,7 @@ li {
 					</c:when>
 					<c:when test="${pagination.page ne i}">
 						<li>
-							<a href="board-bbsdetail.do?bbsid=${bbs.bbsID}?page=${i}">${i}</a>						
+							<a href="board-bbsdetail.do?bbsid=${bbs.bbsID}&page=${i}">${i}</a>						
 						</li>
 					</c:when>
 				</c:choose>
@@ -154,7 +162,7 @@ li {
 		<c:choose>
 				<c:when test="${pagination.nextPage lt pagination.lastPage}">
 					<li>
-						<a href="board-bbsdetail.do?bbsid=${bbs.bbsID}?page=${pagination.nextPage}">▶</a>
+						<a href="board-bbsdetail.do?bbsid=${bbs.bbsID}&page=${pagination.nextPage}">▶</a>
 					</li>
 				</c:when>
 		</c:choose> 

@@ -53,6 +53,9 @@ public class BbsDAO {
 				bbs.setBbsViews(rs.getInt("bbsViews"));
 				bbs.setBbsUserID(rs.getString("bbsUserID"));
 				bbs.setBbsDate(rs.getString("bbsDate"));
+				bbs.setBbsgroup(rs.getInt("bbsgroup"));
+				bbs.setBbsorder(rs.getInt("bbsorder"));
+				bbs.setBbsdepth(rs.getInt("bbsdepth"));
 				
 				list.add(bbs);
 			}
