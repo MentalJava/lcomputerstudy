@@ -80,7 +80,7 @@ li {
 	<table>
 		<tr>
 			<td><a href="board-bbslist.do" class="btn">목록</a></td>
-			<c:if test="${sessionScope.user ne null}">
+			<c:if test="${sessionScope.user ne null && sessionScope.user.u_idx ne null}">
 				<td><a href="board-bbsedit.do?bbsid=${bbs.bbsID}" class="btn">수정</a></td>
 				<td><a href="board-bbsdelete-process.do?bbsid=${bbs.bbsID}" class="btn">삭제</a></td>
 				<td><a href="board-bbscontents.do?group=${bbs.bbsgroup}&order=${bbs.bbsorder}&depth=${bbs.bbsdepth}" class="btn">답글쓰기</a></td>
@@ -131,7 +131,7 @@ li {
 					</td>
 					<td>
 						<button type="button" class="btnReply" c_group="${comments.c_group}" c_order="${comments.c_order}" c_depth="${comments.c_depth}">저장</button>
-						<button type="button" class="btncancle">취소</button>
+						<button type="button" class="btnCancel">취소</button>
 					</td>
 				</tr>
 			</c:forEach>

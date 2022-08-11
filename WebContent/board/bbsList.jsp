@@ -20,10 +20,10 @@ table td, th {
 
 .button {
 	background-color : white;
-	margin-left : 60%;
+	margin-left : 65%;
 	border : none;
 	width : 70px;
-	height : 50px;	
+	height : 40px;	
 	opacity: 0.6;
   transition: 0.3s;
 }
@@ -55,11 +55,11 @@ li {
     <table>
         <caption style="font-size : 35px">게시글 목록</caption>
         <colgroup>
-            <col width="50px"/>
-            <col width="200px"/>
-            <col width="70px"/>
+            <col width="75px"/>
+            <col width="300px"/>
             <col width="100px"/>
-            <col width="60px"/>
+            <col width="150px"/>
+            <col width="90px"/>
         </colgroup>
         <thead>
             <tr>
@@ -123,15 +123,24 @@ li {
 		</c:choose> 
 	</ul>
 </div>
+<div style="text-align : center;">
+<form action="/board=bbslist.do" method="get" id="myForm">
+		<input type="text" name="word">
+		<input type="submit">
+</form>
+	<select name="type" form="myForm">
+		<option value="nosearch">선택없음</option>
+		<option value="title">제목</option>
+		<option value="ctitle">제목+내용</option>
+		<option value="userid">작성자</option>
+	</select>
+</div>
 <div>
-	<%
-	 	if(session.getAttribute("user") != null) {
-	%>
+	<c:if test="${sessionScope.user ne null && sessionScope.user.u_idx eq bbs.bbsuser}">
 		<button class="button" onclick="location.href='board-bbscontents.do'">글등록</button>
 		<button class="button" onclick="location.href='logout.do'">로그아웃</button>
-	<%
-	 	}	
-	%>
+	</c:if>
 </div>
+
 </body>
 </html>

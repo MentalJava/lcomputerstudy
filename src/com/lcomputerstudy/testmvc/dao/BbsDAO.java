@@ -28,12 +28,16 @@ public class BbsDAO {
 		ArrayList<Bbs> list = null;
 		int pageNum = (pagination.getPage()-1)*Pagination.perPage;
 		
+//		if ()
+//		String where = "where title like '%?%'";
+		
 		try {
 			conn = DBconnection.getConnection();
 			String query = new StringBuilder()
 					.append("SELECT		@ROWNUM := @ROWNUM - 1 AS ROWNUM,\n")
 					.append("			ta.*\n")
 					.append("From		Bbs ta\n")
+//					.append(where)
 					.append("INNER JOIN (SELECT @rownum := (SELECT COUNT(*)-?+1 FROM Bbs ta)) tb ON 1=1\n")
 					.append("ORDER BY bbsgroup DESC, bbsorder ASC\n")
 					.append("LIMIT		?, ").append(Pagination.perPage).append("\n")
@@ -235,12 +239,12 @@ public class BbsDAO {
 	public void getEdit(Bbs bbs2) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		
+		User user = bbs2.getUser();
 		try {
 			conn = DBconnection.getConnection();
 			String sql = "UPDATE bbs SET bbsUserID=?, bbsTitle=?, bbsContents=? WHERE bbsID=?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, bbs2.getBbsUserID());
+			pstmt.setString(1, user.getU_id());
 			pstmt.setString(2, bbs2.getBbsTitle());
 			pstmt.setString(3, bbs2.getBbsContents());
 			pstmt.setInt(4, bbs2.getBbsID());

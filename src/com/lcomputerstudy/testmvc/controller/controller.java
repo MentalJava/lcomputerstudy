@@ -16,6 +16,7 @@ import com.lcomputerstudy.testmvc.service.UserService;
 import com.lcomputerstudy.testmvc.vo.Bbs;
 import com.lcomputerstudy.testmvc.vo.Comm;
 import com.lcomputerstudy.testmvc.vo.Pagination;
+import com.lcomputerstudy.testmvc.vo.Search;
 import com.lcomputerstudy.testmvc.vo.User;
 
 @WebServlet("*.do")
@@ -115,6 +116,18 @@ public class controller extends HttpServlet {
 			break;
 			
 		case "/board-bbslist.do":
+//			String type = request.getParameter("type");
+//			String word = request.getParameter("word");
+//			Search search = null;
+//			if (!type.equals("") && !word.equals("")) {
+//				search = new Search();
+//				search.setType(Integer.parseInt(type));
+//				search.setWord(word);
+//			}
+//			
+			
+			
+			
 			String reqPage1 = request.getParameter("page");
 			if (reqPage1 != null) 
 				page = Integer.parseInt(reqPage1);
@@ -123,6 +136,7 @@ public class controller extends HttpServlet {
 			bbscount = bbsService.getTotalCount();
 			
 			Pagination pagination1 = new Pagination();
+			//pagination1.setSearch(search);
 			pagination1.setPage(page);
 			pagination1.setCount(bbscount);
 			pagination1.init();
@@ -152,6 +166,7 @@ public class controller extends HttpServlet {
 		case "/board-bbscontents-process.do":
 			session = request.getSession();
 			user = (User)session.getAttribute("user");
+			
 			Bbs bbs = new Bbs();
 			String pGroup = request.getParameter("bbsgroup");
 			bbs.setUser(user);
@@ -253,9 +268,12 @@ public class controller extends HttpServlet {
 			break;
 			
 		case "/board-bbsedit-process.do":
+			session = request.getSession();
+			user = (User)session.getAttribute("user");
+			
 			bbs = new Bbs();
+			bbs.setUser(user);
 			bbs.setBbsID(Integer.parseInt(request.getParameter("bbsid")));
-			bbs.setBbsUserID(request.getParameter("userid"));
 			bbs.setBbsTitle(request.getParameter("title"));
 			bbs.setBbsContents(request.getParameter("contents"));
 			
@@ -354,8 +372,10 @@ public class controller extends HttpServlet {
 		case "/comments-comm-process.do":
 			session = request.getSession();
 			user = (User)session.getAttribute("user");
-			
 			String b_id = request.getParameter("b_id");
+			
+			bbs = new Bbs();
+			bbs.setBbsID(Integer.parseInt(request.getParameter("b_id")));
 			
 			comm = new Comm();
 			if(!(b_id.equals(""))) {
@@ -368,7 +388,7 @@ public class controller extends HttpServlet {
 			}
 			
 			isRedirected = true;
-			view = "comments/aj-comment-list";
+			view = "board-bbsdetail.do?bbsid=" + bbs.getBbsID();
 			request.setAttribute("user", user);
 			break;
 		}
