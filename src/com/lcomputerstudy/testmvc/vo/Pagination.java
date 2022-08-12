@@ -11,6 +11,7 @@ public class Pagination {
 	int nextPage;
 	public static final int pageUnit = 5;
 	public static final int perPage = 3;
+	private Search search;
 	
 	public Pagination() {
 		
@@ -95,5 +96,13 @@ public class Pagination {
 	
 	public void setNextPage(int nextPage) {
 		this.nextPage = nextPage;
+	}
+
+	public Search getSearch() {
+		return search;
+	}
+
+	public void setSearch(Search search) {
+		this.search = search;
 	}
 }

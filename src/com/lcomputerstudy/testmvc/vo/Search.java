@@ -3,18 +3,18 @@ package com.lcomputerstudy.testmvc.vo;
 public class Search {
 	
 	private int type;
-	private String word;
+	private String keyword;
 	public int getType() {
 		return type;
 	}
 	public void setType(int type) {
 		this.type = type;
 	}
-	public String getWord() {
-		return word;
+	public String getKeyword() {
+		return keyword;
 	}
-	public void setWord(String word) {
-		this.word = word;
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}
 
 }

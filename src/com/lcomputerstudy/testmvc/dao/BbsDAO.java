@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import com.lcomputerstudy.testmvc.database.DBconnection;
 import com.lcomputerstudy.testmvc.vo.Pagination;
+import com.lcomputerstudy.testmvc.vo.Search;
 import com.lcomputerstudy.testmvc.vo.User;
 import com.lcomputerstudy.testmvc.vo.Bbs;
 
@@ -27,18 +28,40 @@ public class BbsDAO {
 		ResultSet rs = null;
 		ArrayList<Bbs> list = null;
 		int pageNum = (pagination.getPage()-1)*Pagination.perPage;
+		Search search = pagination.getSearch();
+		String where = null;
 		
-//		if ()
-//		String where = "where title like '%?%'";
+//		if (
+		switch (search.getType()) {
+		case 1:
+			where = " where bbsTitle like '%%'";
+			break;
+		case 2:
+			where = " where bbsTitle like '%?%'";
+			break;
+		case 3:
+			where = " where bbsTitle like '%?%' or bbsContents like '%?%'";
+			break;
+		case 4:
+			where = " where bbsUserID like '%?%'";
+			break;
+		}
+	
 		
 		try {
-			conn = DBconnection.getConnection();
+			conn = DBconnection.getConnection();	
+			if (!search.getKeyword().equals("")) {
+				pstmt = conn.prepareStatement(where);
+				pstmt.setString(1, search.getKeyword());
+		 		pstmt.executeQuery();
+		 		pstmt.close();
+			}
 			String query = new StringBuilder()
 					.append("SELECT		@ROWNUM := @ROWNUM - 1 AS ROWNUM,\n")
 					.append("			ta.*\n")
-					.append("From		Bbs ta\n")
-//					.append(where)
-					.append("INNER JOIN (SELECT @rownum := (SELECT COUNT(*)-?+1 FROM Bbs ta)) tb ON 1=1\n")
+					.append("From		bbs ta\n")
+					.append(where)
+					.append("INNER JOIN (SELECT @rownum := (SELECT COUNT(*)-?+1 FROM bbs ta)) tb ON 1=1\n")
 					.append("ORDER BY bbsgroup DESC, bbsorder ASC\n")
 					.append("LIMIT		?, ").append(Pagination.perPage).append("\n")
 					.toString();

@@ -116,15 +116,17 @@ public class controller extends HttpServlet {
 			break;
 			
 		case "/board-bbslist.do":
-//			String type = request.getParameter("type");
-//			String word = request.getParameter("word");
-//			Search search = null;
-//			if (!type.equals("") && !word.equals("")) {
-//				search = new Search();
-//				search.setType(Integer.parseInt(type));
-//				search.setWord(word);
-//			}
-//			
+			String type = request.getParameter("type");
+			String keyword = request.getParameter("keyword");
+			Search search = null;
+			
+			if (type != null && keyword != null) {
+				if (!type.equals("") && !keyword.equals("")) {
+					search = new Search();
+					search.setType(Integer.parseInt(type));
+					search.setKeyword(keyword);
+				}
+			}
 			
 			
 			
@@ -136,7 +138,7 @@ public class controller extends HttpServlet {
 			bbscount = bbsService.getTotalCount();
 			
 			Pagination pagination1 = new Pagination();
-			//pagination1.setSearch(search);
+			pagination1.setSearch(search);
 			pagination1.setPage(page);
 			pagination1.setCount(bbscount);
 			pagination1.init();
