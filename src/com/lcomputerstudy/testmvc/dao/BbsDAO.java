@@ -29,45 +29,46 @@ public class BbsDAO {
 		ArrayList<Bbs> list = null;
 		int pageNum = (pagination.getPage()-1)*Pagination.perPage;
 		Search search = pagination.getSearch();
-		String where = null;
-		
-//		if (
-		switch (search.getType()) {
-		case 1:
-			where = " where bbsTitle like '%%'";
-			break;
-		case 2:
-			where = " where bbsTitle like '%?%'";
-			break;
-		case 3:
-			where = " where bbsTitle like '%?%' or bbsContents like '%?%'";
-			break;
-		case 4:
-			where = " where bbsUserID like '%?%'";
-			break;
-		}
+		String where = "";		
 	
-		
 		try {
 			conn = DBconnection.getConnection();	
-			if (!search.getKeyword().equals("")) {
-				pstmt = conn.prepareStatement(where);
-				pstmt.setString(1, search.getKeyword());
-		 		pstmt.executeQuery();
-		 		pstmt.close();
+			if (search != null && !search.getKeyword().equals("")) {
+				switch (search.getType()) {
+				case 1:
+					where = "WHERE bbsTitle like '%%';\n";
+					break;
+				case 2:
+					where = "WHERE bbsTitle like '%?%';\n";
+					break;
+				case 3:
+					where = "WHERE bbsTitle like '%?%' or bbsContents like '%?%';\n";
+					break;
+				case 4:
+					where = "WHERE bbsUserID like '%?%';\n";
+					break;
+				}
 			}
 			String query = new StringBuilder()
 					.append("SELECT		@ROWNUM := @ROWNUM - 1 AS ROWNUM,\n")
 					.append("			ta.*\n")
 					.append("From		bbs ta\n")
+					.append("INNER JOIN (SELECT @rownum := (SELECT COUNT(*)-?+1 FROM bbs ta" + where + ")) tb ON 1=1\n")
 					.append(where)
-					.append("INNER JOIN (SELECT @rownum := (SELECT COUNT(*)-?+1 FROM bbs ta)) tb ON 1=1\n")
 					.append("ORDER BY bbsgroup DESC, bbsorder ASC\n")
 					.append("LIMIT		?, ").append(Pagination.perPage).append("\n")
 					.toString();
+			
 			pstmt = conn.prepareStatement(query);
+			if(!where.equals("")) {
+			pstmt.setInt(1, pageNum);
+			pstmt.setString(2, search.getKeyword());
+			pstmt.setString(3, search.getKeyword());
+			pstmt.setInt(4, pageNum);
+			} else {
 			pstmt.setInt(1, pageNum);
 			pstmt.setInt(2, pageNum);
+			}
 			rs = pstmt.executeQuery();
 			list = new ArrayList<Bbs>();
 			

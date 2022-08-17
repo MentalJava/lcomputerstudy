@@ -118,6 +118,7 @@ public class controller extends HttpServlet {
 		case "/board-bbslist.do":
 			String type = request.getParameter("type");
 			String keyword = request.getParameter("keyword");
+			String reqPage1 = request.getParameter("page");
 			Search search = null;
 			
 			if (type != null && keyword != null) {
@@ -127,10 +128,6 @@ public class controller extends HttpServlet {
 					search.setKeyword(keyword);
 				}
 			}
-			
-			
-			
-			String reqPage1 = request.getParameter("page");
 			if (reqPage1 != null) 
 				page = Integer.parseInt(reqPage1);
 			

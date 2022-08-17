@@ -124,7 +124,7 @@ li {
 	</ul>
 </div>
 <div style="text-align : center;">
-<form action="/board-bbslist.do" method="get" id="myForm">
+<form action="board-bbslist.do" method="get" id="myForm">
 		<input type="text" name="keyword">
 			<select name="type" form="myForm">
 				<option value="1">선택</option>
@@ -132,7 +132,7 @@ li {
 				<option value="3">제목+내용</option>
 				<option value="4">작성자</option>
 			</select>
-		<input type="submit">
+		<input type="submit" value="검색">
 </form>
 </div>
 <div>
