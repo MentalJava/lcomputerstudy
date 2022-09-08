@@ -31,6 +31,10 @@ public class BbsService {
 		dao.insertBbs(bbs);
 	}
 	
+	public int getTotalCount(Pagination pagination) {
+		return dao.getTotalCount(pagination);
+	}
+	
 	public int getTotalCount() {
 		return dao.getTotalCount();
 	}

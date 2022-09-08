@@ -36,16 +36,16 @@ public class BbsDAO {
 			if (search != null && !search.getKeyword().equals("")) {
 				switch (search.getType()) {
 				case 1:
-					where = "WHERE bbsTitle like '%%';\n";
+					where = "";
 					break;
 				case 2:
-					where = "WHERE bbsTitle like '%?%';\n";
+					where = "WHERE bbsTitle LIKE ?\n";
 					break;
 				case 3:
-					where = "WHERE bbsTitle like '%?%' or bbsContents like '%?%';\n";
+					where = "WHERE bbsTitle LIKE ? or bbsContents like ?\n";
 					break;
 				case 4:
-					where = "WHERE bbsUserID like '%?%';\n";
+					where = "WHERE bbsUserID LIKE ?\n";
 					break;
 				}
 			}
@@ -53,21 +53,45 @@ public class BbsDAO {
 					.append("SELECT		@ROWNUM := @ROWNUM - 1 AS ROWNUM,\n")
 					.append("			ta.*\n")
 					.append("From		bbs ta\n")
-					.append("INNER JOIN (SELECT @rownum := (SELECT COUNT(*)-?+1 FROM bbs ta" + where + ")) tb ON 1=1\n")
+					.append("INNER JOIN (SELECT @rownum := (SELECT COUNT(*)-?+1 FROM bbs ta " + where + ")) tb ON 1=1\n")
 					.append(where)
 					.append("ORDER BY bbsgroup DESC, bbsorder ASC\n")
 					.append("LIMIT		?, ").append(Pagination.perPage).append("\n")
 					.toString();
 			
 			pstmt = conn.prepareStatement(query);
+			
 			if(!where.equals("")) {
-			pstmt.setInt(1, pageNum);
-			pstmt.setString(2, search.getKeyword());
-			pstmt.setString(3, search.getKeyword());
-			pstmt.setInt(4, pageNum);
+				String keyword = search.getKeyword();
+				switch (search.getType()) {
+				case 1:
+					pstmt.setInt(1, pageNum);
+					pstmt.setInt(2, pageNum);
+					break;
+				case 2:
+					pstmt.setInt(1, pageNum);
+					pstmt.setString(2, "%" + keyword + "%");
+					pstmt.setString(3, "%" + keyword + "%");
+					pstmt.setInt(4, pageNum);
+					break;
+				case 3:
+					pstmt.setInt(1, pageNum);
+					pstmt.setString(2, "%" + keyword + "%");
+					pstmt.setString(3, "%" + keyword + "%");
+					pstmt.setString(4, "%" + keyword + "%");
+					pstmt.setString(5, "%" + keyword + "%");
+					pstmt.setInt(6, pageNum);
+					break;
+				case 4:
+					pstmt.setInt(1, pageNum);
+					pstmt.setString(2, "%" + keyword + "%");
+					pstmt.setString(3, "%" + keyword + "%");
+					pstmt.setInt(4, pageNum);
+					break;
+				}
 			} else {
-			pstmt.setInt(1, pageNum);
-			pstmt.setInt(2, pageNum);
+				pstmt.setInt(1, pageNum);
+				pstmt.setInt(2, pageNum);
 			}
 			rs = pstmt.executeQuery();
 			list = new ArrayList<Bbs>();
@@ -178,6 +202,72 @@ public class BbsDAO {
 		}
 	}
 	
+	public int getTotalCount(Pagination pagination) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Search search = pagination.getSearch();
+		String where = "";
+		int count = 0;
+		
+		try {
+			if (search != null && !search.getKeyword().equals("")) {
+				switch (search.getType()) {
+				case 1:
+					where = "";
+					break;
+				case 2:
+					where = "WHERE bbsTitle LIKE ?\n";
+					break;
+				case 3:
+					where = "WHERE bbsTitle LIKE ? or bbsContents like ?\n";
+					break;
+				case 4:
+					where = "WHERE bbsUserID LIKE ?\n";
+					break;
+				}
+			} 
+			conn = DBconnection.getConnection();
+			String query = new StringBuffer()
+					.append("SELECT COUNT(*) count FROM Bbs ")
+					.append(where)
+					.toString();
+			pstmt = conn.prepareStatement(query);
+			if(!where.equals("")) {
+				String keyword = search.getKeyword();
+				switch(search.getType()) {
+				case 1:
+					break;
+				case 2:
+					pstmt.setString(1, "%" + keyword + "%");
+					break;
+				case 3:
+					pstmt.setString(1, "%" + keyword + "%");
+					pstmt.setString(1, "%" + keyword + "%");
+					break;
+				case 4:
+					pstmt.setString(1, "%" + keyword + "%");
+				}
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					count = rs.getInt("count");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
+	}
+	
 	public int getTotalCount() {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -186,7 +276,9 @@ public class BbsDAO {
 		
 		try {
 			conn = DBconnection.getConnection();
-			String query = "SELECT COUNT(*) count FROM Bbs";
+			String query = new StringBuffer()
+					.append("SELECT COUNT(*) count  FROM Bbs")
+					.toString();
 			pstmt = conn.prepareStatement(query);
 			rs = pstmt.executeQuery();
 			
@@ -229,6 +321,7 @@ public class BbsDAO {
 				bbs.setBbsgroup(rs.getInt("bbsgroup"));
 				bbs.setBbsorder(rs.getInt("bbsorder"));
 				bbs.setBbsdepth(rs.getInt("bbsdepth"));
+				bbs.setBbsuser(rs.getInt("bbsuser"));
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

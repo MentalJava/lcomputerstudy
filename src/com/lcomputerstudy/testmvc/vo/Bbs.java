@@ -12,7 +12,16 @@ public class Bbs {
 	private int bbsdepth;
 	private int bbsgroup;
 	private User user;
+	private int bbsuser;
 	
+	public int getBbsuser() {
+		return bbsuser;
+	}
+
+	public void setBbsuser(int bbsuser) {
+		this.bbsuser = bbsuser;
+	}
+
 	public User getUser() {
 		return user;
 	}

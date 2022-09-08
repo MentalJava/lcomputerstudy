@@ -109,7 +109,7 @@ li {
 					</c:when>
 					<c:when test="${pagination1.page ne i}">
 						<li>
-							<a href="board-bbslist.do?page=${i}">${i}</a>						
+							<a href="board-bbslist.do?page=${i}&keyword=${pagination1.search.keyword}&type=${pagination1.search.type}">${i}</a>						
 						</li>
 					</c:when>
 				</c:choose>

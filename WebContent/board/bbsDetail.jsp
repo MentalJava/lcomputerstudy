@@ -80,7 +80,7 @@ li {
 	<table>
 		<tr>
 			<td><a href="board-bbslist.do" class="btn">목록</a></td>
-			<c:if test="${sessionScope.user ne null && sessionScope.user.u_idx ne null}">
+			<c:if test="${sessionScope.user ne null && sessionScope.user.u_idx eq bbs.bbsuser}">
 				<td><a href="board-bbsedit.do?bbsid=${bbs.bbsID}" class="btn">수정</a></td>
 				<td><a href="board-bbsdelete-process.do?bbsid=${bbs.bbsID}" class="btn">삭제</a></td>
 				<td><a href="board-bbscontents.do?group=${bbs.bbsgroup}&order=${bbs.bbsorder}&depth=${bbs.bbsdepth}" class="btn">답글쓰기</a></td>
@@ -108,7 +108,7 @@ li {
 					</td>
 					<td width="80">
 						<div class="btn" style="text-align:center;">
-							<c:if test="${sessionScope.user ne null}">
+							<c:if test="${sessionScope.user ne null && sessionScope.user.u_idx eq bbs.bbsuser}">
 								<a href="#" class="btnReplyForm">답변</a>
 								<a href="#" class="btnUpdateForm">수정</a>
 								<a href="#" class="btnDelete" c_id="${comments.c_id}">삭제</a>

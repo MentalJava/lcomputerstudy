@@ -1,6 +1,9 @@
 package com.lcomputerstudy.testmvc.controller;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,6 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.lcomputerstudy.testmvc.database.DBconnection;
 import com.lcomputerstudy.testmvc.service.BbsService;
@@ -131,10 +138,15 @@ public class controller extends HttpServlet {
 			if (reqPage1 != null) 
 				page = Integer.parseInt(reqPage1);
 			
-			BbsService bbsService = BbsService.getInstance();
-			bbscount = bbsService.getTotalCount();
-			
 			Pagination pagination1 = new Pagination();
+			BbsService bbsService = BbsService.getInstance();
+			if (keyword != null) {
+				if(!keyword.equals("")) {
+				pagination1.setSearch(search);
+				bbscount = bbsService.getTotalCount(pagination1);
+				}
+			}
+			bbscount = bbsService.getTotalCount();
 			pagination1.setSearch(search);
 			pagination1.setPage(page);
 			pagination1.setCount(bbscount);
@@ -145,6 +157,7 @@ public class controller extends HttpServlet {
 			view = "board/bbsList";
 			request.setAttribute("list1", list1);
 			request.setAttribute("pagination1", pagination1);
+			request.setAttribute("search", search);
 			break;
 			
 		case "/board-bbscontents.do":
@@ -390,6 +403,41 @@ public class controller extends HttpServlet {
 			view = "board-bbsdetail.do?bbsid=" + bbs.getBbsID();
 			request.setAttribute("user", user);
 			break;
+			
+		case "/board-upload-test.do":
+			final String ATTACHES_DIR = "C:\\attaches";
+			final int LIMIT_SIZE_BYTES = 1024 * 1024;
+			final String CHARSET = "utf-8";
+			
+			File attachesDir = new File(ATTACHES_DIR);
+			
+			DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
+			fileItemFactory.setRepository(attachesDir);
+			fileItemFactory.setSizeThreshold(LIMIT_SIZE_BYTES);
+			ServletFileUpload fileUpload = new ServletFileUpload(fileItemFactory);
+			
+			try {
+				List<FileItem> items = fileUpload.parseRequest(request);
+				for (FileItem item : items) {
+					if (item.isFormField()) {
+						System.out.printf("파라미터 명 : %s, 파라미터 값 : %s\n", item.getFieldName(), item.getString(CHARSET));
+					} else {
+						System.out.printf("파라미터 명 : %s, 파일명 : %s, 파일 크기 : %s bytes \n",item.getFieldName(), item.getName(), item.getSize());
+						if (item.getSize() > 0) {
+							String separator = File.separator;
+							int index = item.getName().lastIndexOf(separator);
+							String fileName = item.getName().substring(index + 1);
+							File uploadFile = new File(ATTACHES_DIR + separator + fileName);
+							item.write(uploadFile);
+						}
+					}
+				}
+				
+				System.out.println("<h1>파일 업로드 완료</h1>");
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("<h1>파일 업로드 중 오류가 발생하였습니다.</h1>");
+			}
 		}
 		
 		if (!isRedirected) {
@@ -399,8 +447,7 @@ public class controller extends HttpServlet {
 			response.sendRedirect(view);
 		}
 	}
-
-
+	
 	String checkSession(HttpServletRequest request, HttpServletResponse response, String command) {
 		HttpSession session = request.getSession();
 		

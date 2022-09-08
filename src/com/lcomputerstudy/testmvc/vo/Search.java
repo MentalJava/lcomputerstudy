@@ -4,6 +4,11 @@ public class Search {
 	
 	private int type;
 	private String keyword;
+	
+	public Search () {
+		
+	}
+	
 	public int getType() {
 		return type;
 	}

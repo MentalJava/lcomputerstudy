@@ -27,6 +27,6 @@
 				<td><input type="submit" value="저장">&nbsp;&nbsp;<button type="button" onclick="location.href='board-bbslist.do'">목록</button></td>
 			</tr>
 		</table>
-</form>				
+</form>
 </body>
 </html>
